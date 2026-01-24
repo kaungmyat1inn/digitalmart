@@ -84,12 +84,13 @@
                         </h3>
 
                         <div class="mt-auto pt-4 border-t border-gray-50">
-                            <div class="text-lg md:text-xl font-bold text-blue-600">
-                                {{ number_format($product->price) }} <span class="text-sm text-gray-500 font-normal">ကျပ်</span>
+                            <div class="text-base md:text-xl font-bold text-blue-600">
+                                {{ number_format($product->price) }} <span
+                                    class="text-xs md:text-sm text-gray-500 font-normal">ကျပ်</span>
                             </div>
 
                             <a href="{{ route('add_to_cart', $product->id) }}"
-                                class="block w-full text-center mt-2 md:mt-4 bg-gray-100 hover:bg-blue-600 hover:text-white text-gray-700 font-medium py-2 text-sm md:text-base rounded transition shadow-sm">
+                                class="block w-full text-center mt-2 md:mt-4 bg-gray-100 hover:bg-blue-600 hover:text-white text-gray-700 font-medium py-2 text-xs md:text-base rounded transition shadow-sm">
                                 ခြင်းထဲထည့်ပါ
                             </a>
                         </div>
@@ -162,7 +163,7 @@
                                 </div>
                             </div>
                             <a id="modalAddToCart" href="#"
-                                class="inline-flex items-center justify-center px-8 py-3 text-base font-bold text-white transition-all duration-200 bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transform hover:-translate-y-0.5 focus:ring-4 focus:ring-blue-300">
+                                class="inline-flex items-center justify-center px-6 py-2 text-base font-bold text-white transition-all duration-200 bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transform hover:-translate-y-0.5 focus:ring-4 focus:ring-blue-300">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
                                     stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
