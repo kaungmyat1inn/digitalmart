@@ -48,12 +48,15 @@
             </a>
         </div>
 
-        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-8">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             @foreach ($products as $product)
-                <div
-                    class="bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 group border border-gray-100 flex flex-col h-full">
+                <div class="bg-gray-50 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group border border-gray-200 flex flex-col h-full cursor-pointer"
+                    onclick="openProductModal(this)" data-id="{{ $product->id }}" data-name="{{ $product->name }}"
+                    data-price="{{ number_format($product->price) }}" data-image="{{ asset('storage/' . $product->image) }}"
+                    data-category="{{ $product->category->name }}" data-code="{{ $product->code_number }}"
+                    data-add-cart-url="{{ route('add_to_cart', $product->id) }}" data-description="{{ $product->description }}">
 
-                    <div class="relative h-40 md:h-60 overflow-hidden rounded-t-2xl bg-gray-100">
+                    <div class="relative overflow-hidden rounded-t-2xl bg-gray-100 aspect-[3/2]">
                         <span
                             class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-xs font-bold px-2 py-1 rounded-md text-gray-800 shadow-sm z-10">
                             {{ $product->category->name }}
@@ -62,37 +65,19 @@
                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
                             class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
 
-                        <div
-                            class="absolute inset-0 bg-black/40 flex items-center justify-center opacity-0 group-hover:opacity-100 transition duration-300">
-                            <button onclick="openProductModal(this)" data-id="{{ $product->id }}"
-                                data-name="{{ $product->name }}" data-price="{{ number_format($product->price) }}"
-                                data-image="{{ asset('storage/' . $product->image) }}"
-                                data-category="{{ $product->category->name }}" data-code="{{ $product->code_number }}"
-                                data-add-cart-url="{{ route('add_to_cart', $product->id) }}"
-                                data-description="{{ $product->description }}"
-                                class="bg-white text-gray-900 px-6 py-2 rounded-full font-bold hover:bg-blue-600 hover:text-white transition transform translate-y-4 group-hover:translate-y-0">
-                                View Details
-                            </button>
-                        </div>
                     </div>
 
-                    <div class="p-3 md:p-5 flex flex-col flex-grow">
-                        <p class="text-xs text-gray-500 mb-1 font-medium">{{ $product->code_number }}</p>
-                        <h3
-                            class="text-sm md:text-lg font-bold text-gray-800 mb-2 leading-tight group-hover:text-blue-600 transition">
+                    <div class="p-2 md:p-4 flex flex-col flex-grow">
+
+                        <h3 class="text-sm font-bold text-gray-800 mb-2 leading-tight group-hover:text-blue-600 transition">
                             {{ $product->name }}
                         </h3>
 
-                        <div class="mt-auto pt-4 border-t border-gray-50">
-                            <div class="text-base md:text-xl font-bold text-blue-600">
+                        <div class="mt-auto pt-2 border-t border-gray-100 flex items-center justify-between">
+                            <div class="text-base font-bold text-blue-600">
                                 {{ number_format($product->price) }} <span
                                     class="text-xs md:text-sm text-gray-500 font-normal">ကျပ်</span>
                             </div>
-
-                            <a href="{{ route('add_to_cart', $product->id) }}"
-                                class="block w-full text-center mt-2 md:mt-4 bg-gray-100 hover:bg-blue-600 hover:text-white text-gray-700 font-medium py-2 text-xs md:text-base rounded transition shadow-sm">
-                                ခြင်းထဲထည့်ပါ
-                            </a>
                         </div>
                     </div>
                 </div>
@@ -114,7 +99,7 @@
 
             <!-- Modal panel -->
             <div
-                class="inline-block w-full max-w-4xl overflow-hidden text-left align-bottom transition-all transform bg-white rounded-2xl shadow-2xl sm:my-8 sm:align-middle">
+                class="inline-block w-full max-w-2xl overflow-hidden text-left align-bottom transition-all transform bg-white rounded-2xl shadow-2xl sm:my-8 sm:align-middle">
                 <div class="absolute top-0 right-0 pt-4 pr-4 z-10">
                     <button type="button" onclick="closeProductModal()"
                         class="text-gray-400 bg-white rounded-full p-1 hover:text-gray-500 hover:bg-gray-100 focus:outline-none transition">
@@ -126,21 +111,21 @@
                     </button>
                 </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2">
+                <div class="grid grid-cols-1 sm:grid-cols-2">
                     <!-- Product Image -->
-                    <div class="relative h-48 md:h-full bg-gray-100 flex items-center justify-center p-6">
+                    <div class="relative h-48 sm:h-full bg-gray-100 flex items-center justify-center p-6">
                         <img id="modalImage" src="" alt="Product Image"
                             class="max-h-full max-w-full object-contain shadow-sm rounded-lg">
                     </div>
 
                     <!-- Product Details -->
-                    <div class="p-6 md:p-10 flex flex-col">
+                    <div class="p-6 flex flex-col">
                         <div class="mb-auto">
                             <span id="modalCategory"
                                 class="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-50 rounded-full border border-blue-100">
                                 Category
                             </span>
-                            <h2 id="modalTitle" class="mb-2 text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
+                            <h2 id="modalTitle" class="mb-2 text-xl md:text-2xl font-bold text-gray-900 leading-tight">
                                 Product Name
                             </h2>
                             <p class="mb-4 text-sm text-gray-500 font-mono">Code: <span id="modalCode"></span></p>
@@ -163,8 +148,8 @@
                                 </div>
                             </div>
                             <a id="modalAddToCart" href="#"
-                                class="inline-flex items-center justify-center px-5 py-3 text-sm font-bold text-white transition-all duration-200 bg-blue-600 rounded-full shadow-lg md:px-6 md:text-base hover:bg-blue-700 hover:shadow-xl transform hover:-translate-y-0.5 focus:ring-4 focus:ring-blue-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-2 h-2 mr-2 md:w-5 md:h-5" fill="none"
+                                class="inline-flex items-center justify-center px-4 py-2 text-sm font-bold text-white transition-all duration-200 bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transform hover:-translate-y-0.5 focus:ring-4 focus:ring-blue-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 mr-2" fill="none"
                                     viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />

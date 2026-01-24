@@ -4,69 +4,113 @@
     <div class="container mx-auto px-4 py-10">
         <h2 class="text-3xl font-bold mb-6 text-gray-800">Your Shopping Cart</h2>
 
-        @if (session('cart'))
+        @if (session('cart') && count(session('cart')) > 0)
             <div class="bg-white rounded-lg shadow-lg overflow-hidden">
-                <table class="w-full text-left border-collapse">
-                    <thead class="bg-gray-100 text-gray-600 uppercase text-sm">
-                        <tr>
-                            <th class="py-4 px-6">Product</th>
-                            <th class="py-4 px-6">Price</th>
-                            <th class="py-4 px-6 text-center">Quantity</th>
-                            <th class="py-4 px-6">Subtotal</th>
-                            <th class="py-4 px-6">Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody class="text-gray-700">
-                        @php $total = 0 @endphp
-                        @foreach (session('cart') as $id => $details)
-                            @php $total += $details['price'] * $details['quantity'] @endphp
-                            <tr class="border-b border-gray-100 hover:bg-gray-50">
-                                <td class="py-4 px-6 flex items-center gap-4">
-                                    @if(Str::startsWith($details['image'], 'http'))
-                                        <img src="{{ $details['image'] }}" alt="{{ $details['name'] }}"
-                                            class="w-16 h-16 object-cover rounded">
-                                    @else
-                                        <img src="{{ asset('storage/' . $details['image']) }}" alt="{{ $details['name'] }}"
-                                            class="w-16 h-16 object-cover rounded">
-                                    @endif
-                                    <div>
-                                        <p class="font-bold">{{ $details['name'] }}</p>
-                                        {{-- Cart မှာပြမယ့် Code --}}
-                                        <p class="text-xs text-blue-500 font-bold">{{ $details['code_number'] ?? '' }}</p>
-                                    </div>
-                                </td>
-                                <td class="py-4 px-6">{{ number_format($details['price']) }} Ks</td>
-                                <td class="py-4 px-6 text-center">
-                                    <div class="flex items-center justify-center border-gray-200 rounded">
-                                        <button
-                                            class="update-cart-qty px-3 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-l transition"
-                                            data-id="{{ $id }}" data-action="decrease">
-                                            -
-                                        </button>
-
-                                        <input type="text" readonly
-                                            class="w-12 text-center bg-gray-50 border-t border-b border-gray-200 py-1 text-gray-700 font-medium focus:outline-none qty-input-{{ $id }}"
-                                            value="{{ $details['quantity'] }}">
-
-                                        <button
-                                            class="update-cart-qty px-3 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-r transition"
-                                            data-id="{{ $id }}" data-action="increase">
-                                            +
-                                        </button>
-                                    </div>
-                                </td>
-                                <td class="py-4 px-6">
-                                    <button class="text-red-500 hover:text-red-700 remove-from-cart" data-id="{{ $id }}">
-                                        Delete
-                                    </button>
-                                </td>
+                <!-- Desktop Table -->
+                <div class="hidden sm:block">
+                    <table class="w-full text-left border-collapse">
+                        <thead class="bg-gray-100 text-gray-600 uppercase text-sm">
+                            <tr>
+                                <th class="py-4 px-6">Product</th>
+                                <th class="py-4 px-6">Price</th>
+                                <th class="py-4 px-6 text-center">Quantity</th>
+                                <th class="py-4 px-6 text-right">Subtotal</th>
+                                <th class="py-4 px-6 text-center">Actions</th>
                             </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+                        </thead>
+                        <tbody class="text-gray-700">
+                            @php $total = 0 @endphp
+                            @foreach (session('cart') as $id => $details)
+                                @php $total += $details['price'] * $details['quantity'] @endphp
+                                <tr class="border-b border-gray-100 hover:bg-gray-50">
+                                    <td class="py-4 px-6 flex items-center gap-4">
+                                        <img src="{{ Str::startsWith($details['image'], 'http') ? $details['image'] : asset('storage/' . $details['image']) }}"
+                                            alt="{{ $details['name'] }}" class="w-16 h-16 object-cover rounded">
+                                        <div>
+                                            <p class="font-bold">{{ $details['name'] }}</p>
+                                            <p class="text-xs text-blue-500 font-bold">{{ $details['code_number'] ?? '' }}
+                                            </p>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6">{{ number_format($details['price']) }} Ks</td>
+                                    <td class="py-4 px-6">
+                                        <div class="flex items-center justify-center">
+                                            <button
+                                                class="update-cart-qty px-3 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-l transition"
+                                                data-id="{{ $id }}" data-action="decrease">-</button>
+                                            <input type="text" readonly
+                                                class="w-12 text-center bg-gray-50 border-t border-b border-gray-200 py-1"
+                                                value="{{ $details['quantity'] }}">
+                                            <button
+                                                class="update-cart-qty px-3 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-r transition"
+                                                data-id="{{ $id }}" data-action="increase">+</button>
+                                        </div>
+                                    </td>
+                                    <td class="py-4 px-6 text-right font-bold">
+                                        {{ number_format($details['price'] * $details['quantity']) }} Ks</td>
+                                    <td class="py-4 px-6 text-center">
+                                        <button class="text-red-500 hover:text-red-700 remove-from-cart"
+                                            data-id="{{ $id }}">
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" fill="none"
+                                                viewBox="0 0 24 24" stroke="currentColor">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                                            </svg>
+                                        </button>
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
 
-                <div class="p-6 bg-gray-50 flex justify-between items-center">
-                    <a href="{{ route('home') }}" class="text-blue-600 hover:underline font-medium">
+                <!-- Mobile Cards -->
+                <div class="sm:hidden">
+                    @php $total = 0 @endphp
+                    @foreach (session('cart') as $id => $details)
+                        @php $total += $details['price'] * $details['quantity'] @endphp
+                        <div class="p-4 border-b border-gray-200">
+                            <div class="flex items-start gap-4">
+                                <img src="{{ Str::startsWith($details['image'], 'http') ? $details['image'] : asset('storage/' . $details['image']) }}"
+                                    alt="{{ $details['name'] }}" class="w-20 h-20 object-cover rounded-lg">
+                                <div class="flex-grow">
+                                    <p class="font-bold text-gray-800">{{ $details['name'] }}</p>
+                                    <p class="text-xs text-blue-500 font-bold mb-2">{{ $details['code_number'] ?? '' }}
+                                    </p>
+                                    <p class="text-sm text-gray-600">{{ number_format($details['price']) }} Ks</p>
+                                </div>
+                                <button class="text-red-500 hover:text-red-700 remove-from-cart"
+                                    data-id="{{ $id }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                        fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="flex items-center justify-between mt-4">
+                                <div class="flex items-center">
+                                    <button
+                                        class="update-cart-qty px-3 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-l transition"
+                                        data-id="{{ $id }}" data-action="decrease">-</button>
+                                    <input type="text" readonly
+                                        class="w-12 text-center bg-gray-50 border-t border-b border-gray-200 py-1"
+                                        value="{{ $details['quantity'] }}">
+                                    <button
+                                        class="update-cart-qty px-3 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-r transition"
+                                        data-id="{{ $id }}" data-action="increase">+</button>
+                                </div>
+                                <p class="font-bold text-gray-800">
+                                    {{ number_format($details['price'] * $details['quantity']) }} Ks</p>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
+
+                <div class="p-6 bg-gray-50 flex flex-col sm:flex-row justify-between items-center">
+                    <a href="{{ route('home') }}"
+                        class="text-blue-600 hover:underline font-medium mb-4 sm:mb-0">
                         &larr; Continue Shopping
                     </a>
 
