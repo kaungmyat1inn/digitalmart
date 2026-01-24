@@ -130,6 +130,17 @@
                                     </label>
                                 </div>
                             </div>
+
+                            {{-- Description --}}
+                            <div>
+                                <label for="description"
+                                    class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                    Description
+                                </label>
+                                <textarea id="description" name="description" rows="4"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm placeholder-gray-400"
+                                    placeholder="Enter product description...">{{ old('description') }}</textarea>
+                            </div>
                         </div>
                     </div>
                 </div>

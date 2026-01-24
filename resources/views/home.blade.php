@@ -69,6 +69,7 @@
                                 data-image="{{ asset('storage/' . $product->image) }}"
                                 data-category="{{ $product->category->name }}" data-code="{{ $product->code_number }}"
                                 data-add-cart-url="{{ route('add_to_cart', $product->id) }}"
+                                data-description="{{ $product->description }}"
                                 class="bg-white text-gray-900 px-6 py-2 rounded-full font-bold hover:bg-blue-600 hover:text-white transition transform translate-y-4 group-hover:translate-y-0">
                                 View Details
                             </button>
@@ -145,32 +146,11 @@
 
                             <div class="mb-4 md:mb-6">
                                 <h3 class="font-bold text-gray-900 mb-2">Description</h3>
-                                <p class="text-gray-600 leading-relaxed text-sm">
-                                    Experience premium quality with this product. Designed for durability and performance,
-                                    it meets all your digital needs.
+                                <p id="modalDescription" class="text-gray-600 leading-relaxed text-sm">
+                                    <!-- Description will be loaded here -->
                                 </p>
                             </div>
 
-                            <div class="mb-6 md:mb-8">
-                                <h3 class="font-bold text-gray-900 mb-3">Specifications</h3>
-                                <ul class="space-y-2 text-sm text-gray-600">
-                                    <li class="flex items-center"><svg class="w-4 h-4 mr-2 text-green-500" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7"></path>
-                                        </svg> 100% Genuine Product</li>
-                                    <li class="flex items-center"><svg class="w-4 h-4 mr-2 text-green-500" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7"></path>
-                                        </svg> 1 Year Warranty</li>
-                                    <li class="flex items-center"><svg class="w-4 h-4 mr-2 text-green-500" fill="none"
-                                            stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M5 13l4 4L19 7"></path>
-                                        </svg> Fast Shipping Available</li>
-                                </ul>
-                            </div>
                         </div>
 
                         <div class="flex items-center justify-between pt-6 border-t border-gray-100 mt-4">
@@ -209,6 +189,9 @@
             document.getElementById('modalCode').textContent = data.code;
             document.getElementById('modalPrice').textContent = data.price;
             document.getElementById('modalAddToCart').href = data.addCartUrl;
+
+            // Description
+            document.getElementById('modalDescription').textContent = data.description || 'No description available.';
 
             // Show Modal
             modal.classList.remove('hidden');
