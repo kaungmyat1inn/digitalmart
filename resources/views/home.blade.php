@@ -156,16 +156,16 @@
 
                         <div class="flex items-center justify-between pt-6 border-t border-gray-100 mt-4">
                             <div>
-                                <span class="text-sm text-gray-500 block">Price</span>
-                                <div class="text-3xl font-bold text-blue-600">
+
+                                <div class="text-1xl font-bold text-blue-600">
                                     <span id="modalPrice">0</span> <span
-                                        class="text-lg font-normal text-gray-500">ကျပ်</span>
+                                        class="text-1xl font-normal text-gray-500">ကျပ်</span>
                                 </div>
                             </div>
                             <a id="modalAddToCart" href="#"
-                                class="inline-flex items-center justify-center px-6 py-2 text-base font-bold text-white transition-all duration-200 bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 hover:shadow-xl transform hover:-translate-y-0.5 focus:ring-4 focus:ring-blue-300">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 mr-2" fill="none" viewBox="0 0 24 24"
-                                    stroke="currentColor">
+                                class="inline-flex items-center justify-center px-5 py-3 text-sm font-bold text-white transition-all duration-200 bg-blue-600 rounded-full shadow-lg md:px-6 md:text-base hover:bg-blue-700 hover:shadow-xl transform hover:-translate-y-0.5 focus:ring-4 focus:ring-blue-300">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-2 h-2 mr-2 md:w-5 md:h-5" fill="none"
+                                    viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
