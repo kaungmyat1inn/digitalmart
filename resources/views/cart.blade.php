@@ -316,24 +316,73 @@
         </div>
     @endif
 
+    {{-- Delete Confirmation Modal --}}
+    <div id="deleteConfirmModal"
+        class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden flex items-center justify-center z-50 backdrop-blur-sm transition-opacity">
+        <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 relative animate-[fadeIn_0.3s_ease-out]">
+            <div class="text-center">
+                <div
+                    class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                    <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                    </svg>
+                </div>
+                <h3 class="text-lg font-medium text-gray-900">Remove Item?</h3>
+                <p class="mt-2 text-sm text-gray-500">Are you sure you want to remove this item from your cart? This
+                    action cannot be undone.</p>
+            </div>
+            <div class="mt-6 flex justify-center gap-3">
+                <button type="button" id="cancel-delete"
+                    class="w-full bg-gray-200 text-gray-700 py-2.5 rounded-xl font-bold hover:bg-gray-300 transition">
+                    Cancel
+                </button>
+                <button type="button" id="confirm-delete"
+                    class="w-full bg-red-600 text-white py-2.5 rounded-xl font-bold hover:bg-red-700 transition shadow-lg">
+                    Remove
+                </button>
+            </div>
+        </div>
+    </div>
+
+
     {{-- Remove From Cart Script --}}
     <script type="module">
-        $(".remove-from-cart").click(function (e) {
-            e.preventDefault();
-            var ele = $(this);
-            if (confirm("Are you sure want to remove?")) {
+        $(document).ready(function() {
+            let productIdToDelete;
+
+            // Open confirmation modal
+            $(".remove-from-cart").click(function(e) {
+                e.preventDefault();
+                productIdToDelete = $(this).attr("data-id");
+                $('#deleteConfirmModal').removeClass('hidden');
+            });
+
+            // Cancel delete action
+            $("#cancel-delete").click(function() {
+                $('#deleteConfirmModal').addClass('hidden');
+            });
+
+            // Confirm delete action
+            $("#confirm-delete").click(function() {
                 $.ajax({
                     url: '{{ route('remove_from_cart') }}',
                     method: "DELETE",
                     data: {
                         _token: '{{ csrf_token() }}',
-                        id: ele.attr("data-id")
+                        id: productIdToDelete
                     },
-                    success: function (response) {
+                    success: function(response) {
                         window.location.reload();
+                    },
+                    error: function() {
+                        // Optionally handle errors, e.g., show an error message
+                        $('#deleteConfirmModal').addClass('hidden');
+                        alert('Error: Could not remove the item.');
                     }
                 });
-            }
+            });
         });
     </script>
     <script type="module">
