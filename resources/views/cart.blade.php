@@ -47,10 +47,10 @@
                                         </div>
                                     </td>
                                     <td class="py-4 px-6 text-right font-bold">
-                                        {{ number_format($details['price'] * $details['quantity']) }} Ks</td>
+                                        {{ number_format($details['price'] * $details['quantity']) }} Ks
+                                    </td>
                                     <td class="py-4 px-6 text-center">
-                                        <button class="text-red-500 hover:text-red-700 remove-from-cart"
-                                            data-id="{{ $id }}">
+                                        <button class="text-red-500 hover:text-red-700 remove-from-cart" data-id="{{ $id }}">
                                             <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" fill="none"
                                                 viewBox="0 0 24 24" stroke="currentColor">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -79,10 +79,8 @@
                                     </p>
                                     <p class="text-sm text-gray-600">{{ number_format($details['price']) }} Ks</p>
                                 </div>
-                                <button class="text-red-500 hover:text-red-700 remove-from-cart"
-                                    data-id="{{ $id }}">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
-                                        fill="currentColor">
+                                <button class="text-red-500 hover:text-red-700 remove-from-cart" data-id="{{ $id }}">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                         <path fill-rule="evenodd"
                                             d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
                                             clip-rule="evenodd" />
@@ -102,15 +100,15 @@
                                         data-id="{{ $id }}" data-action="increase">+</button>
                                 </div>
                                 <p class="font-bold text-gray-800">
-                                    {{ number_format($details['price'] * $details['quantity']) }} Ks</p>
+                                    {{ number_format($details['price'] * $details['quantity']) }} Ks
+                                </p>
                             </div>
                         </div>
                     @endforeach
                 </div>
 
                 <div class="p-6 bg-gray-50 flex flex-col sm:flex-row justify-between items-center">
-                    <a href="{{ route('home') }}"
-                        class="text-blue-600 hover:underline font-medium mb-4 sm:mb-0">
+                    <a href="{{ route('home') }}" class="text-blue-600 hover:underline font-medium mb-4 sm:mb-0">
                         &larr; Continue Shopping
                     </a>
 
@@ -217,8 +215,9 @@
                                     </path>
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-bold text-gray-900">Order Successful</h3>
-                            <p class="text-sm text-gray-500 mt-1">အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်</p>
+                            <h3 class="text-xl font-bold text-gray-900">အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်</h3>
+                            <p class="text-sm text-gray-500 mt-1">အော်ဒါနံပါတ်နှင့် ဖုန်းနံပါတ်ကိုအသုံးပြု၍ Track Order တွင်
+                                အော်ဒါအခြေအနေကိုစစ်ဆေးနိုင်ပါသည်</p>
                         </div>
 
                         <div class="border-b-2 border-dashed border-gray-200 mb-6"></div>
@@ -232,6 +231,14 @@
                                 <span class="text-gray-500 min-w-[100px]">အော်ဒါနံပါတ်</span>
                                 <span
                                     class="font-bold text-blue-600 text-right">{{ session('order_success')['order_number'] }}</span>
+                            </div>
+                            <div class="flex justify-between items-start">
+                                <span class="text-gray-500 min-w-[100px]">အမည်</span>
+                                <span class="font-bold text-blue-600 text-right">{{ session('order_success')['name'] }}</span>
+                            </div>
+                            <div class="flex justify-between items-start">
+                                <span class="text-gray-500 min-w-[100px]">ဖုန်းနံပါတ်</span>
+                                <span class="font-bold text-blue-600 text-right">{{ session('order_success')['phone'] }}</span>
                             </div>
                         </div>
 
@@ -321,26 +328,24 @@
         class="fixed inset-0 bg-gray-900 bg-opacity-60 hidden flex items-center justify-center z-50 backdrop-blur-sm transition-opacity">
         <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-sm w-full mx-4 relative animate-[fadeIn_0.3s_ease-out]">
             <div class="text-center">
-                <div
-                    class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
-                    <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none"
-                        viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-red-100 mb-4">
+                    <svg class="h-6 w-6 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                        stroke="currentColor" aria-hidden="true">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                             d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
                     </svg>
                 </div>
-                <h3 class="text-lg font-medium text-gray-900">Remove Item?</h3>
-                <p class="mt-2 text-sm text-gray-500">Are you sure you want to remove this item from your cart? This
-                    action cannot be undone.</p>
+                <h3 class="text-lg font-medium text-gray-900">အဝယ်စာရင်းထဲကပယ်မယ်နော်</h3>
+                <p class="mt-2 text-sm text-gray-500">အဝယ်စာရင်းထဲကပယ်ဖျက်မှာသေချာရဲ့လားခင်ဗျာ</p>
             </div>
             <div class="mt-6 flex justify-center gap-3">
                 <button type="button" id="cancel-delete"
                     class="w-full bg-gray-200 text-gray-700 py-2.5 rounded-xl font-bold hover:bg-gray-300 transition">
-                    Cancel
+                    မဖျက်တော့ဘူး
                 </button>
                 <button type="button" id="confirm-delete"
                     class="w-full bg-red-600 text-white py-2.5 rounded-xl font-bold hover:bg-red-700 transition shadow-lg">
-                    Remove
+                    တကယ်ဖျက်မယ်
                 </button>
             </div>
         </div>
@@ -349,23 +354,23 @@
 
     {{-- Remove From Cart Script --}}
     <script type="module">
-        $(document).ready(function() {
+        $(document).ready(function () {
             let productIdToDelete;
 
             // Open confirmation modal
-            $(".remove-from-cart").click(function(e) {
+            $(".remove-from-cart").click(function (e) {
                 e.preventDefault();
                 productIdToDelete = $(this).attr("data-id");
                 $('#deleteConfirmModal').removeClass('hidden');
             });
 
             // Cancel delete action
-            $("#cancel-delete").click(function() {
+            $("#cancel-delete").click(function () {
                 $('#deleteConfirmModal').addClass('hidden');
             });
 
             // Confirm delete action
-            $("#confirm-delete").click(function() {
+            $("#confirm-delete").click(function () {
                 $.ajax({
                     url: '{{ route('remove_from_cart') }}',
                     method: "DELETE",
@@ -373,10 +378,10 @@
                         _token: '{{ csrf_token() }}',
                         id: productIdToDelete
                     },
-                    success: function(response) {
+                    success: function (response) {
                         window.location.reload();
                     },
-                    error: function() {
+                    error: function () {
                         // Optionally handle errors, e.g., show an error message
                         $('#deleteConfirmModal').addClass('hidden');
                         alert('Error: Could not remove the item.');

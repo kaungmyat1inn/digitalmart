@@ -117,7 +117,9 @@ class CartController extends Controller
             session()->flash('order_success', [
                 'order_number' => $order->order_number,
                 'date' => now()->timezone('Asia/Yangon')->format('d/m/Y h:i A'),
-                'items' => $cart // အပေါ်မှာ code_number နဲ့ ပြင်ထားလို့ ဒီမှာ Auto ပါလာပါလိမ့်မယ်
+                'items' => $cart, // အပေါ်မှာ code_number နဲ့ ပြင်ထားလို့ ဒီမှာ Auto ပါလာပါလိမ့်မယ်
+                'name' => $request->name,
+                'phone' => $request->phone,
             ]);
 
             // Cart ရှင်းမယ်
