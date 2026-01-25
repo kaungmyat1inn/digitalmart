@@ -9,8 +9,10 @@ use App\Http\Controllers\ProductController;
 
 // ============ PUBLIC ROUTES ============
 Route::get('/', [HomeController::class, 'index'])->name('home');
+
 Route::get('cart', [CartController::class, 'index'])->name('cart.index');
 Route::get('add-to-cart/{id}', [CartController::class, 'addToCart'])->name('add_to_cart');
+Route::get('cart/count', [CartController::class, 'count'])->name('cart.count');
 Route::delete('remove-from-cart', [CartController::class, 'remove'])->name('remove_from_cart');
 Route::post('checkout', [CartController::class, 'checkout'])->name('checkout')->middleware('spam.protect');
 Route::patch('update-cart', [CartController::class, 'update'])->name('update_cart');

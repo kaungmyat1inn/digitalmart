@@ -18,9 +18,11 @@ class CartController extends Controller
 
     public function addToCart($id)
     {
-
         $product = Product::withTrashed()->find($id);
         if (!$product) {
+            if (request()->expectsJson()) {
+                return response()->json(['success' => false, 'message' => 'Product not found or unavailable.']);
+            }
             return redirect()->back()->with('error', 'Product not found or unavailable.');
         }
 
@@ -30,17 +32,22 @@ class CartController extends Controller
         if (isset($cart[$id])) {
             $newQty = $cart[$id]['quantity'] + 1;
             if ($newQty > $product->stock) {
+                if (request()->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Cannot add more than available stock.']);
+                }
                 return redirect()->back()->with('error', 'Cannot add more than available stock.');
             }
             $cart[$id]['quantity'] = $newQty;
         } else {
             // မရှိသေးရင် အသစ်ထည့်မယ်
             if ($product->stock < 1) {
+                if (request()->expectsJson()) {
+                    return response()->json(['success' => false, 'message' => 'Product is out of stock.']);
+                }
                 return redirect()->back()->with('error', 'Product is out of stock.');
             }
             $cart[$id] = [
                 "name" => $product->name,
-                // ပြင်လိုက်သည့်နေရာ (code -> code_number)
                 "code_number" => $product->code_number,
                 "quantity" => 1,
                 "price" => $product->price,
@@ -49,7 +56,25 @@ class CartController extends Controller
         }
 
         session()->put('cart', $cart);
+
+        if (request()->expectsJson()) {
+            $totalItems = array_sum(array_column($cart, 'quantity'));
+            return response()->json([
+                'success' => true,
+                'message' => 'Product added to cart successfully! 🛒',
+                'cart_count' => $totalItems
+            ]);
+        }
+
         return redirect()->route('cart.index')->with('success', 'Product added to cart successfully!');
+    }
+
+    // AJAX: Get cart count
+    public function count()
+    {
+        $cart = session()->get('cart', []);
+        $count = array_sum(array_column($cart, 'quantity'));
+        return response()->json(['count' => $count, 'success' => true]);
     }
 
     public function update(Request $request)
