@@ -13,8 +13,10 @@ return new class extends Migration
             $table->string('order_number')->unique();
             $table->string('customer_name');
             $table->string('customer_phone');
+            $table->text('address')->nullable();
             $table->decimal('total_amount', 10, 2);
             $table->string('status')->default('pending');
+            $table->string('ip_address')->nullable();
             $table->timestamps();
         });
     }
