@@ -61,8 +61,7 @@ class ProductController extends Controller
             $data['image'] = $path;
         }
 
-        // Checkbox value handling (on = 1, null = 0)
-        $data['is_available'] = $request->has('is_available') ? 1 : 0;
+        // is_available removed
 
         Product::create($data);
 
@@ -103,7 +102,7 @@ class ProductController extends Controller
             $data['image'] = $request->file('image')->store('products', 'public');
         }
 
-        $data['is_available'] = $request->has('is_available') ? 1 : 0;
+        // is_available removed
 
         $product->update($data);
 

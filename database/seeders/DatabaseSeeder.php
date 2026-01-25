@@ -94,7 +94,7 @@ class DatabaseSeeder extends Seeder
                     'name' => $product['name'],
                     'code_number' => $this->generateUniqueCode($categoryId),
                     'price' => $product['price'],
-                    'is_available' => rand(0, 1),
+                    'stock' => rand(5, 50),
                     'image' => 'https://placehold.co/600x400?text=' . urlencode($product['name']),
                     'category_id' => $categoryId,
                 ]);

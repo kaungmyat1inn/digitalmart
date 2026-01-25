@@ -4,31 +4,37 @@
 
 @section('content')
     <div class="max-w-5xl mx-auto">
-        
+
         <div class="flex items-center justify-between mb-8">
             <div>
                 <h2 class="text-3xl font-bold text-gray-800 dark:text-white">Edit Product</h2>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Update product information and images</p>
             </div>
-            <a href="{{ route('admin.products.index') }}" class="px-4 py-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center gap-2">
+            <a href="{{ route('admin.products.index') }}"
+                class="px-4 py-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center gap-2">
                 <i class="fas fa-arrow-left text-sm"></i> Back to List
             </a>
         </div>
 
-        <form id="product-form" action="{{ route('admin.products.update', $product->id) }}" method="POST" enctype="multipart/form-data">
+        <form id="product-form" action="{{ route('admin.products.update', $product->id) }}" method="POST"
+            enctype="multipart/form-data">
             @csrf
             @method('PUT')
 
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                
+
                 <div class="lg:col-span-2 space-y-6">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
-                        <h3 class="font-bold text-gray-800 dark:text-white mb-4 text-lg border-b border-gray-100 dark:border-gray-700 pb-3">Basic Information</h3>
-                        
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6">
+                        <h3
+                            class="font-bold text-gray-800 dark:text-white mb-4 text-lg border-b border-gray-100 dark:border-gray-700 pb-3">
+                            Basic Information</h3>
+
                         <div class="space-y-5">
                             {{-- Product Name --}}
                             <div>
-                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Product Name</label>
+                                <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Product
+                                    Name</label>
                                 <input type="text" name="name" value="{{ old('name', $product->name) }}" required
                                     class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm placeholder-gray-400">
                             </div>
@@ -36,9 +42,11 @@
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 {{-- Category --}}
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Category</label>
+                                    <label
+                                        class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Category</label>
                                     <div class="relative">
-                                        <select name="category_id" id="category-select" onchange="handleCategoryChange(this)"
+                                        <select name="category_id" id="category-select"
+                                            onchange="handleCategoryChange(this)"
                                             class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none transition shadow-sm">
                                             <option value="">Select Category...</option>
                                             @foreach($categories as $category)
@@ -47,66 +55,70 @@
                                                 </option>
                                             @endforeach
                                             <option disabled>-------------------</option>
-                                            <option value="new_category" class="font-bold text-blue-600 bg-blue-50 dark:bg-gray-600">+ Create New Category</option>
+                                            <option value="new_category"
+                                                class="font-bold text-blue-600 bg-blue-50 dark:bg-gray-600">+ Create New
+                                                Category</option>
                                         </select>
                                     </div>
                                 </div>
 
                                 {{-- Code Number --}}
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Code Number</label>
-                                    <input type="text" id="code_number" name="code_number" value="{{ old('code_number', $product->code_number) }}" required
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Code
+                                        Number</label>
+                                    <input type="text" id="code_number" name="code_number"
+                                        value="{{ old('code_number', $product->code_number) }}" required
                                         class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm">
                                 </div>
-                                    {{-- Group ID --}}
-                                    <div>
-                                        <label for="group_id" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                            Product Group
-                                        </label>
-                                        <input type="text" id="group_id" name="group_id" value="{{ old('group_id', $product->group_id) }}"
-                                            class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm"
-                                            placeholder="Enter group ID (optional)">
-                                    </div>
-                                    {{-- Supplier --}}
-                                    <div>
-                                        <label for="supplier" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                                            Supplier
-                                        </label>
-                                        <input type="text" id="supplier" name="supplier" value="{{ old('supplier', $product->supplier) }}"
-                                            class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm"
-                                            placeholder="Enter supplier name (optional)">
-                                    </div>
+                                {{-- Group ID --}}
+                                <div>
+                                    <label for="group_id"
+                                        class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                        Product Group
+                                    </label>
+                                    <input type="text" id="group_id" name="group_id"
+                                        value="{{ old('group_id', $product->group_id) }}"
+                                        class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm"
+                                        placeholder="Enter group ID (optional)">
+                                </div>
+                                {{-- Supplier --}}
+                                <div>
+                                    <label for="supplier"
+                                        class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                        Supplier
+                                    </label>
+                                    <input type="text" id="supplier" name="supplier"
+                                        value="{{ old('supplier', $product->supplier) }}"
+                                        class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm"
+                                        placeholder="Enter supplier name (optional)">
+                                </div>
                             </div>
 
                             {{-- Price & Status --}}
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Price (Ks)</label>
+                                    <label class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Price
+                                        (Ks)</label>
                                     <input type="number" name="price" value="{{ old('price', $product->price) }}" required
                                         class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm">
                                 </div>
                                 <div>
-                                    <label for="stock" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Stock</label>
-                                    <input type="number" id="stock" name="stock" value="{{ old('stock', $product->stock) }}" min="0" required autocomplete="off"
+                                    <label for="stock"
+                                        class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Stock</label>
+                                    <input type="number" id="stock" name="stock" value="{{ old('stock', $product->stock) }}"
+                                        min="0" required autocomplete="off"
                                         class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm"
                                         placeholder="0">
                                 </div>
                                 <div class="flex flex-col justify-end pb-2">
-                                    <label class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition group">
-                                        <div class="relative flex items-center">
-                                            <input type="checkbox" name="is_available" id="is_available" value="1" 
-                                                {{ old('is_available', $product->is_available) ? 'checked' : '' }}
-                                                class="peer sr-only">
-                                            <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                                        </div>
-                                        <span class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-blue-600">Available for Sale</span>
-                                    </label>
+                                    <!-- is_available removed -->
                                 </div>
                             </div>
 
                             {{-- Description --}}
                             <div>
-                                <label for="description" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                <label for="description"
+                                    class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                     Description
                                 </label>
                                 <textarea id="description" name="description" rows="4"
@@ -118,30 +130,39 @@
                 </div>
 
                 <div class="lg:col-span-1">
-                    <div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 sticky top-6">
-                        <h3 class="font-bold text-gray-800 dark:text-white mb-4 text-lg border-b border-gray-100 dark:border-gray-700 pb-3">Product Image</h3>
-                        
+                    <div
+                        class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-6 sticky top-6">
+                        <h3
+                            class="font-bold text-gray-800 dark:text-white mb-4 text-lg border-b border-gray-100 dark:border-gray-700 pb-3">
+                            Product Image</h3>
+
                         <div class="space-y-4">
-                            <div class="relative w-full aspect-square bg-gray-100 dark:bg-gray-900 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center overflow-hidden hover:border-blue-500 transition group cursor-pointer" onclick="document.getElementById('image-input').click()">
-                                
+                            <div class="relative w-full aspect-square bg-gray-100 dark:bg-gray-900 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 flex flex-col items-center justify-center overflow-hidden hover:border-blue-500 transition group cursor-pointer"
+                                onclick="document.getElementById('image-input').click()">
+
                                 {{-- Logic for Image URL --}}
                                 @php
                                     $imageUrl = 'https://placehold.co/600x600?text=Upload+Image';
-                                    if($product->image) {
+                                    if ($product->image) {
                                         $imageUrl = Str::startsWith($product->image, 'http') ? $product->image : asset('storage/' . $product->image);
                                     }
                                 @endphp
 
                                 {{-- Image Tag with Blur Transition --}}
-                                <img id="image-preview" src="{{ $imageUrl }}" 
+                                <img id="image-preview" src="{{ $imageUrl }}"
                                     class="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out">
-                                
+
                                 {{-- Progress Overlay (Initially Hidden) --}}
-                                <div id="upload-overlay" class="absolute inset-0 bg-black/60 z-10 hidden flex-col items-center justify-center backdrop-blur-sm">
+                                <div id="upload-overlay"
+                                    class="absolute inset-0 bg-black/60 z-10 hidden flex-col items-center justify-center backdrop-blur-sm">
                                     <div class="w-20 h-20 relative flex items-center justify-center">
-                                        <svg class="animate-spin h-full w-full text-blue-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                        <svg class="animate-spin h-full w-full text-blue-500"
+                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
+                                                stroke-width="4"></circle>
+                                            <path class="opacity-75" fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+                                            </path>
                                         </svg>
                                         <span id="upload-percent" class="absolute text-white font-bold text-sm">0%</span>
                                     </div>
@@ -149,8 +170,10 @@
                                 </div>
 
                                 {{-- Change Icon --}}
-                                <div id="change-icon" class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition flex items-center justify-center">
-                                    <div class="bg-white/90 text-gray-800 px-4 py-2 rounded-lg font-bold shadow-lg transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition">
+                                <div id="change-icon"
+                                    class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition flex items-center justify-center">
+                                    <div
+                                        class="bg-white/90 text-gray-800 px-4 py-2 rounded-lg font-bold shadow-lg transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition">
                                         <i class="fas fa-camera mr-2"></i> Change
                                     </div>
                                 </div>
@@ -165,10 +188,12 @@
             </div>
 
             <div class="mt-8 flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-700">
-                <a href="{{ route('admin.products.index') }}" class="px-6 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition">Cancel</a>
-                
+                <a href="{{ route('admin.products.index') }}"
+                    class="px-6 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition">Cancel</a>
+
                 {{-- Button type="button" to prevent default submit, we handle in JS --}}
-                <button type="submit" id="submit-btn" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg flex items-center gap-2">
+                <button type="submit" id="submit-btn"
+                    class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg shadow-lg flex items-center gap-2">
                     <i class="fas fa-save"></i> Update Product
                 </button>
             </div>
@@ -178,11 +203,11 @@
     {{-- Script for Upload Progress & Blur Effect --}}
     <script>
         // 1. Image Preview Logic
-        document.getElementById('image-input').addEventListener('change', function(event) {
+        document.getElementById('image-input').addEventListener('change', function (event) {
             const file = event.target.files[0];
             if (file) {
                 const reader = new FileReader();
-                reader.onload = function(e) {
+                reader.onload = function (e) {
                     document.getElementById('image-preview').src = e.target.result;
                 }
                 reader.readAsDataURL(file);
@@ -190,7 +215,7 @@
         });
 
         // 2. AJAX Upload Logic with Progress
-        document.getElementById('product-form').addEventListener('submit', function(e) {
+        document.getElementById('product-form').addEventListener('submit', function (e) {
             e.preventDefault(); // Stop normal submission
 
             const form = this;
@@ -213,28 +238,28 @@
             xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
 
             // Progress Event
-            xhr.upload.onprogress = function(e) {
+            xhr.upload.onprogress = function (e) {
                 if (e.lengthComputable) {
                     const percentComplete = Math.round((e.loaded / e.total) * 100);
                     percentText.textContent = percentComplete + '%';
-                    
+
                     // Optional: Make blur less intense as progress increases
                     // imagePreview.style.filter = `blur(${5 - (percentComplete / 20)}px)`; 
                 }
             };
 
             // Completion Event
-            xhr.onload = function() {
+            xhr.onload = function () {
                 if (xhr.status === 200 || xhr.status === 302) {
                     // Success!
                     percentText.textContent = '100%';
-                    
+
                     // Remove Blur Effect (Clear Image)
                     imagePreview.classList.remove('blur-sm');
-                    
+
                     // Show Success Checkmark briefly then redirect
                     overlay.innerHTML = '<i class="fas fa-check-circle text-5xl text-green-500 animate-bounce"></i><p class="text-white font-bold mt-2">Saved!</p>';
-                    
+
                     setTimeout(() => {
                         window.location.href = "{{ route('admin.products.index') }}";
                     }, 1000);
@@ -250,7 +275,7 @@
                 }
             };
 
-            xhr.onerror = function() {
+            xhr.onerror = function () {
                 alert('Network Error');
                 submitBtn.disabled = false;
             };
@@ -302,7 +327,7 @@
             }
         }
     </script>
-    
+
     {{-- Include Category Modal Code Here as well --}}
     {{-- (Insert the Category Modal Code from previous steps here) --}}
 

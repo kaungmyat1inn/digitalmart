@@ -14,7 +14,7 @@ class HomeController extends Controller
         $products = \App\Models\Product::with(['category', 'variants' => function ($q) {
             $q->with('category');
         }])
-            // ->where('is_available', true)
+            ->where('stock', '>', 0)
             ->latest()
             ->get();
 

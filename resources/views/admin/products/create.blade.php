@@ -137,19 +137,7 @@
                                         placeholder="0">
                                 </div>
                                 <div class="flex flex-col justify-end pb-2">
-                                    <label for="is_available"
-                                        class="flex items-center p-3 border border-gray-200 dark:border-gray-600 rounded-lg cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700 transition group">
-                                        <div class="relative flex items-center">
-                                            <input type="checkbox" name="is_available" id="is_available" value="1" checked
-                                                class="peer sr-only">
-                                            <div
-                                                class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-600 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600">
-                                            </div>
-                                        </div>
-                                        <span
-                                            class="ml-3 text-sm font-medium text-gray-700 dark:text-gray-300 group-hover:text-blue-600">Available
-                                            for Sale</span>
-                                    </label>
+                                    <!-- is_available removed -->
                                 </div>
                             </div>
 
