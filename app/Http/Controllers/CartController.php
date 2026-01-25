@@ -18,7 +18,11 @@ class CartController extends Controller
 
     public function addToCart($id)
     {
-        $product = Product::findOrFail($id);
+
+        $product = Product::withTrashed()->find($id);
+        if (!$product) {
+            return redirect()->back()->with('error', 'Product not found or unavailable.');
+        }
 
         $cart = session()->get('cart', []);
 

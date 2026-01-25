@@ -46,6 +46,7 @@ class ProductController extends Controller
             'code_number' => 'required|unique:products,code_number',
             'price' => 'required|numeric',
             'category_id' => 'nullable|exists:categories,id',
+            'group_id' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string'
         ]);
@@ -85,6 +86,7 @@ class ProductController extends Controller
             'code_number' => 'required|unique:products,code_number,' . $id,
             'price' => 'required|numeric',
             'category_id' => 'nullable|exists:categories,id',
+            'group_id' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string'
         ]);

@@ -18,4 +18,11 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);
     }
+
+    // Product variants (same group_id)
+    public function variants()
+    {
+        return $this->hasMany(Product::class, 'group_id', 'group_id')
+            ->where('id', '!=', $this->id);
+    }
 }

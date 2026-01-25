@@ -136,6 +136,10 @@
                                     <!-- Description will be loaded here -->
                                 </p>
                             </div>
+                            <div class="mb-4">
+                                <h3 class="font-bold text-gray-900 mb-2">Variants</h3>
+                                <div id="modalVariants" class="flex flex-wrap gap-2"></div>
+                            </div>
 
                         </div>
 
@@ -164,6 +168,7 @@
     </div>
 
     <script>
+        window.productsData = @json($products);
         function openProductModal(element) {
             const modal = document.getElementById('productModal');
             const data = element.dataset;
@@ -179,6 +184,31 @@
             // Description
             document.getElementById('modalDescription').textContent = data.description || 'No description available.';
 
+            // Variants
+            let variants = [];
+            if (window.productsData) {
+                const currentId = parseInt(data.id);
+                const currentProduct = window.productsData.find(p => p.id == currentId);
+                if (currentProduct && currentProduct.variants && currentProduct.variants.length > 0) {
+                    variants = currentProduct.variants;
+                }
+            }
+            const variantsDiv = document.getElementById('modalVariants');
+            variantsDiv.innerHTML = '';
+            if (variants.length > 0) {
+                variants.forEach(variant => {
+                    const btn = document.createElement('button');
+                    btn.className = 'px-3 py-1 rounded-lg border border-blue-300 bg-blue-50 text-blue-700 text-xs font-semibold hover:bg-blue-100 transition';
+                    btn.textContent = variant.name + ' (' + variant.code_number + ')';
+                    btn.onclick = function () {
+                        const el = document.querySelector('[data-id="' + variant.id + '"]');
+                        if (el) openProductModal(el);
+                    };
+                    variantsDiv.appendChild(btn);
+                });
+            } else {
+                variantsDiv.innerHTML = '<span class="text-xs text-gray-400">No variants available.</span>';
+            }
             // Show Modal
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden'; // Prevent background scrolling

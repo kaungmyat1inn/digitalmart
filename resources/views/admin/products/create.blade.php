@@ -94,6 +94,16 @@
                                             class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm">
                                     </div>
                                 </div>
+                                {{-- Group ID --}}
+                                <div>
+                                    <label for="group_id"
+                                        class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                        Product Group
+                                    </label>
+                                    <input type="text" id="group_id" name="group_id" value="{{ old('group_id') }}"
+                                        class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm"
+                                        placeholder="Enter group ID (optional)">
+                                </div>
                             </div>
 
                             {{-- Price & Status --}}
