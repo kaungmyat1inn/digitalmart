@@ -7,6 +7,7 @@ use Illuminate\Database\Seeder;
 use App\Models\Category;
 use App\Models\Product;
 use App\Models\Order;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
@@ -14,7 +15,16 @@ class DatabaseSeeder extends Seeder
      * Seed the application's database.
      */
     public function run(): void
+
     {
+
+        \App\Models\User::create([
+            'name' => 'Admin',
+            'email' => 'digitalmart.mag@gmail.com',
+            'password' => Hash::make('123456'),
+            'role' => 'super_admin', // အစ်ကို့ database structure အပေါ် မူတည်ပါတယ်
+        ]);
+
         // 1. Category များ ဆောက်တည်မယ်
         $categories = ['Electronics', 'Fashion', 'Phone & Accessories', 'Computer', 'Shoes'];
 
