@@ -45,8 +45,8 @@
     <div class="flex h-screen overflow-hidden">
 
         {{-- Sidebar (Code အတိုချုံ့ထားသည်) --}}
-        <aside
-            class="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 hidden md:block flex-shrink-0">
+        <aside id="sidebar"
+            class="fixed inset-y-0 left-0 z-50 w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 transform -translate-x-full transition-transform duration-300 ease-in-out">
             <div class="h-16 flex items-center justify-center border-b border-gray-200 dark:border-gray-700">
                 <h1 class="text-2xl font-bold text-blue-600">Digital<span
                         class="text-gray-800 dark:text-white">Mart</span></h1>
@@ -105,7 +105,7 @@
                     @if(Auth::check() && Auth::user()->isSuperAdmin())
                         <a href="{{ route('admin.users.index') }}"
                             class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors mb-1 
-                               {{ request()->routeIs('admin.users.*') ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-600' }}">
+                                       {{ request()->routeIs('admin.users.*') ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-600' }}">
 
                             {{-- Icon --}}
                             <div class="w-5 flex justify-center">
@@ -125,8 +125,9 @@
             <header
                 class="h-16 bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 flex items-center justify-between px-6">
 
-                {{-- Mobile Menu Button --}}
-                <button class="md:hidden text-gray-500 dark:text-gray-300"><i class="fas fa-bars text-xl"></i></button>
+                {{-- Menu Button --}}
+                <button id="sidebar-toggle" class="text-gray-500 dark:text-gray-300 focus:outline-none"><i
+                        class="fas fa-bars text-xl"></i></button>
                 <h2 class="text-lg font-bold text-gray-700 dark:text-white">@yield('title', 'Dashboard')</h2>
 
                 <div class="flex items-center gap-4">
@@ -275,6 +276,30 @@
             }
             checkNewOrders();
             setInterval(checkNewOrders, 5000);
+        });
+
+        // Sidebar Toggle Logic
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggle = document.getElementById('sidebar-toggle');
+        const sidebarLinks = sidebar.querySelectorAll('a');
+
+        sidebarToggle.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('-translate-x-full');
+        });
+
+        // Close sidebar when clicking a link
+        sidebarLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                sidebar.classList.add('-translate-x-full');
+            });
+        });
+
+        // Close sidebar when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+                sidebar.classList.add('-translate-x-full');
+            }
         });
     </script>
 
