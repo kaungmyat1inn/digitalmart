@@ -28,9 +28,16 @@ class CartController extends Controller
 
         // Cart ထဲမှာ ရှိပြီးသားဆိုရင် အရေအတွက် (Quantity) တိုးမယ်
         if (isset($cart[$id])) {
-            $cart[$id]['quantity']++;
+            $newQty = $cart[$id]['quantity'] + 1;
+            if ($newQty > $product->stock) {
+                return redirect()->back()->with('error', 'Cannot add more than available stock.');
+            }
+            $cart[$id]['quantity'] = $newQty;
         } else {
             // မရှိသေးရင် အသစ်ထည့်မယ်
+            if ($product->stock < 1) {
+                return redirect()->back()->with('error', 'Product is out of stock.');
+            }
             $cart[$id] = [
                 "name" => $product->name,
                 // ပြင်လိုက်သည့်နေရာ (code -> code_number)
@@ -49,13 +56,23 @@ class CartController extends Controller
     {
         if ($request->id && $request->quantity) {
             $cart = session()->get('cart');
-
+            $product = Product::withTrashed()->find($request->id);
+            if (!$product) {
+                session()->flash('error', 'Product not found or unavailable.');
+                return;
+            }
+            $newQty = (int) $request->quantity;
+            if ($newQty < 1) {
+                $newQty = 1;
+            }
+            if ($newQty > $product->stock) {
+                session()->flash('error', 'Cannot set quantity more than available stock.');
+                return;
+            }
             // Quantity ကို Update လုပ်မယ်
-            $cart[$request->id]['quantity'] = $request->quantity;
-
+            $cart[$request->id]['quantity'] = $newQty;
             // Session ထဲ ပြန်ထည့်မယ်
             session()->put('cart', $cart);
-
             session()->flash('success', 'Cart updated successfully');
         }
     }

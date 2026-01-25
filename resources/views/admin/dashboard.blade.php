@@ -5,6 +5,33 @@
 @section('content')
     {{-- Cards Section --}}
     <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+        {{-- Low Stock Products --}}
+        <div
+            class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center justify-between transition-colors duration-300">
+            <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Low Stock (&le; 5)</p>
+                <h3 class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">{{ $lowStockCount }}</h3>
+                <p class="text-xs text-yellow-500 mt-1">Check inventory</p>
+            </div>
+            <div
+                class="h-12 w-12 bg-yellow-100 dark:bg-yellow-900 text-yellow-600 dark:text-yellow-300 rounded-lg flex items-center justify-center text-xl">
+                <i class="fas fa-exclamation-triangle"></i>
+            </div>
+        </div>
+
+        {{-- Out of Stock Products --}}
+        <div
+            class="bg-white dark:bg-gray-800 p-6 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 flex items-center justify-between transition-colors duration-300">
+            <div>
+                <p class="text-sm text-gray-500 dark:text-gray-400 mb-1">Out of Stock</p>
+                <h3 class="text-2xl font-bold text-red-600 dark:text-red-400">{{ $outOfStockCount }}</h3>
+                <p class="text-xs text-red-500 mt-1">Restock needed</p>
+            </div>
+            <div
+                class="h-12 w-12 bg-red-100 dark:bg-red-900 text-red-600 dark:text-red-300 rounded-lg flex items-center justify-center text-xl">
+                <i class="fas fa-box-open"></i>
+            </div>
+        </div>
 
         {{-- Total Sales --}}
         <div
@@ -105,10 +132,8 @@
 
                             <td class="px-6 py-4">
                                 <div class="flex flex-col">
-                                    <span
-                                        class="font-medium text-gray-900 dark:text-white">{{ $order->customer_name }}</span>
-                                    <span
-                                        class="text-xs text-gray-500 dark:text-gray-400">{{ $order->customer_phone }}</span>
+                                    <span class="font-medium text-gray-900 dark:text-white">{{ $order->customer_name }}</span>
+                                    <span class="text-xs text-gray-500 dark:text-gray-400">{{ $order->customer_phone }}</span>
                                 </div>
                             </td>
 
@@ -116,21 +141,20 @@
                                 @php
                                     $statusClasses = match ($order->status) {
                                         'pending'
-                                            => 'bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-300 border-orange-200 dark:border-orange-800',
+                                        => 'bg-orange-100 text-orange-700 dark:bg-orange-900/50 dark:text-orange-300 border-orange-200 dark:border-orange-800',
                                         'confirmed'
-                                            => 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 border-blue-200 dark:border-blue-800',
+                                        => 'bg-blue-100 text-blue-700 dark:bg-blue-900/50 dark:text-blue-300 border-blue-200 dark:border-blue-800',
                                         'processing'
-                                            => 'bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300 border-purple-200 dark:border-purple-800',
+                                        => 'bg-purple-100 text-purple-700 dark:bg-purple-900/50 dark:text-purple-300 border-purple-200 dark:border-purple-800',
                                         'delivered'
-                                            => 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300 border-green-200 dark:border-green-800',
+                                        => 'bg-green-100 text-green-700 dark:bg-green-900/50 dark:text-green-300 border-green-200 dark:border-green-800',
                                         'cancelled'
-                                            => 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300 border-red-200 dark:border-red-800',
+                                        => 'bg-red-100 text-red-700 dark:bg-red-900/50 dark:text-red-300 border-red-200 dark:border-red-800',
                                         default
-                                            => 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 border-gray-200',
+                                        => 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300 border-gray-200',
                                     };
                                 @endphp
-                                <span
-                                    class="px-3 py-1 rounded-full text-xs font-bold border {{ $statusClasses }} capitalize">
+                                <span class="px-3 py-1 rounded-full text-xs font-bold border {{ $statusClasses }} capitalize">
                                     {{ $order->status }}
                                 </span>
                             </td>

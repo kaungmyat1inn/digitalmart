@@ -39,7 +39,7 @@
                                                 class="update-cart-qty px-3 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-l transition"
                                                 data-id="{{ $id }}" data-action="decrease">-</button>
                                             <input type="text" readonly
-                                                class="w-12 text-center bg-gray-50 border-t border-b border-gray-200 py-1"
+                                                class="w-12 text-center bg-gray-50 border-t border-b border-gray-200 py-1 qty-input-{{ $id }}"
                                                 value="{{ $details['quantity'] }}">
                                             <button
                                                 class="update-cart-qty px-3 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-r transition"
@@ -93,7 +93,7 @@
                                         class="update-cart-qty px-3 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-l transition"
                                         data-id="{{ $id }}" data-action="decrease">-</button>
                                     <input type="text" readonly
-                                        class="w-12 text-center bg-gray-50 border-t border-b border-gray-200 py-1"
+                                        class="w-12 text-center bg-gray-50 border-t border-b border-gray-200 py-1 qty-input-{{ $id }}"
                                         value="{{ $details['quantity'] }}">
                                     <button
                                         class="update-cart-qty px-3 py-1 bg-gray-200 text-gray-600 hover:bg-gray-300 rounded-r transition"

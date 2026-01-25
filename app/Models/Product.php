@@ -14,6 +14,10 @@ class Product extends Model
 
     protected $guarded = [];
 
+    /**
+     * stock: integer, available quantity in inventory
+     */
+
     public function category()
     {
         return $this->belongsTo(Category::class);

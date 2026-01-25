@@ -85,6 +85,7 @@
                         <th class="px-6 py-4 font-semibold">Category</th>
                         <th class="px-6 py-4 font-semibold">Supplier</th>
                         <th class="px-6 py-4 font-semibold">Price</th>
+                        <th class="px-6 py-4 font-semibold text-center">Stock</th>
                         <th class="px-6 py-4 font-semibold text-center">Status</th>
                         <th class="px-6 py-4 font-semibold text-right">Actions</th>
                     </tr>
@@ -126,12 +127,13 @@
                                 {{ number_format($product->price) }} Ks
                             </td>
 
-                            {{-- Status / Availability --}}
+                            {{-- Stock --}}
                             <td class="px-6 py-4 text-center">
-                                @if($product->is_available)
-                                    <span class="text-green-600 bg-green-100 py-1 px-3 rounded-full text-xs font-bold">In Stock</span>
+                                <span class="font-mono text-base">{{ $product->stock }}</span>
+                                @if($product->stock > 0)
+                                    <span class="ml-2 text-green-600 bg-green-100 py-1 px-2 rounded-full text-xs font-bold">In Stock</span>
                                 @else
-                                    <span class="text-red-600 bg-red-100 py-1 px-3 rounded-full text-xs font-bold">Out of Stock</span>
+                                    <span class="ml-2 text-red-600 bg-red-100 py-1 px-2 rounded-full text-xs font-bold">Out of Stock</span>
                                 @endif
                             </td>
 

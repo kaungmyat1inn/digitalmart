@@ -28,12 +28,18 @@ class AdminController extends Controller
         // ၅။ လတ်တလော အော်ဒါ ၅ ခု (Recent Orders)
         $recentOrders = Order::latest()->take(5)->get();
 
+        // Low stock and out-of-stock products
+        $lowStockCount = Product::where('stock', '>', 0)->where('stock', '<=', 5)->count();
+        $outOfStockCount = Product::where('stock', '<=', 0)->count();
+
         return view('admin.dashboard', compact(
             'totalSales',
             'todaySales',
             'pendingOrders',
             'todayOrders',
-            'recentOrders'
+            'recentOrders',
+            'lowStockCount',
+            'outOfStockCount'
         ));
     }
 
