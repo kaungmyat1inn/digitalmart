@@ -67,6 +67,15 @@
                                             class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm"
                                             placeholder="Enter group ID (optional)">
                                     </div>
+                                    {{-- Supplier --}}
+                                    <div>
+                                        <label for="supplier" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                                            Supplier
+                                        </label>
+                                        <input type="text" id="supplier" name="supplier" value="{{ old('supplier', $product->supplier) }}"
+                                            class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm"
+                                            placeholder="Enter supplier name (optional)">
+                                    </div>
                             </div>
 
                             {{-- Price & Status --}}

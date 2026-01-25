@@ -83,6 +83,7 @@
                     <tr>
                         <th class="px-6 py-4 font-semibold">Product</th>
                         <th class="px-6 py-4 font-semibold">Category</th>
+                        <th class="px-6 py-4 font-semibold">Supplier</th>
                         <th class="px-6 py-4 font-semibold">Price</th>
                         <th class="px-6 py-4 font-semibold text-center">Status</th>
                         <th class="px-6 py-4 font-semibold text-right">Actions</th>
@@ -113,6 +114,11 @@
                                 <span class="bg-gray-100 text-gray-600 py-1 px-3 rounded-full text-xs font-bold dark:bg-gray-600 dark:text-gray-300">
                                     {{ $product->category->name ?? 'Uncategorized' }}
                                 </span>
+                            </td>
+
+                            {{-- Supplier --}}
+                            <td class="px-6 py-4">
+                                {{ $product->supplier ?? 'N/A' }}
                             </td>
 
                             {{-- Price --}}

@@ -48,7 +48,8 @@ class ProductController extends Controller
             'category_id' => 'nullable|exists:categories,id',
             'group_id' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'supplier' => 'nullable|string'
         ]);
 
         $data = $request->all();
@@ -88,7 +89,8 @@ class ProductController extends Controller
             'category_id' => 'nullable|exists:categories,id',
             'group_id' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'description' => 'nullable|string'
+            'description' => 'nullable|string',
+            'supplier' => 'nullable|string'
         ]);
 
         $data = $request->all();
