@@ -45,7 +45,7 @@ class ProductController extends Controller
             'name' => 'required',
             'code_number' => 'required|unique:products,code_number',
             'price' => 'required|numeric',
-            'category_id' => 'nullable|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
             'group_id' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'description' => 'nullable|string',
@@ -54,14 +54,15 @@ class ProductController extends Controller
 
         $data = $request->all();
 
+        // Ensure stock is set and valid
+        $data['stock'] = isset($data['stock']) && is_numeric($data['stock']) && $data['stock'] > 0 ? (int)$data['stock'] : 1;
+
         // Image Upload
         if ($request->hasFile('image')) {
             // storage/app/public/products ဖိုဒါထဲသိမ်းမည်
             $path = $request->file('image')->store('products', 'public');
             $data['image'] = $path;
         }
-
-        // is_available removed
 
         Product::create($data);
 

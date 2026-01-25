@@ -19,6 +19,17 @@
         <form id="product-form" action="{{ route('admin.products.store') }}" method="POST" enctype="multipart/form-data">
             @csrf
 
+            @if ($errors->any())
+                <div class="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+                    <h4 class="font-bold text-red-600 mb-2">Please fix the following errors:</h4>
+                    <ul class="list-disc list-inside text-sm text-red-600">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                 <div class="lg:col-span-2 space-y-6">
@@ -32,21 +43,18 @@
                         <div class="space-y-5">
                             {{-- Product Name --}}
                             <div>
-                                {{-- Added for="name" --}}
                                 <label for="name" class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                     Product Name
                                 </label>
-                                {{-- Added id="name" --}}
                                 <input type="text" id="name" name="name" value="{{ old('name') }}" required
                                     autocomplete="off"
-                                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm placeholder-gray-400"
+                                    class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm placeholder-gray-400 @error('name') border-red-500 @enderror"
                                     placeholder="Enter product name">
                             </div>
 
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                                 {{-- Category --}}
                                 <div>
-                                    {{-- Added for="category-select" --}}
                                     <label for="category-select"
                                         class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                         Category
@@ -54,7 +62,7 @@
                                     <div class="relative">
                                         <select name="category_id" id="category-select"
                                             onchange="handleCategoryChange(this)"
-                                            class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none transition shadow-sm">
+                                            class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none transition shadow-sm @error('category_id') border-red-500 @enderror">
 
                                             <option value="">Select Category...</option>
 
@@ -80,7 +88,6 @@
 
                                 {{-- Code Number --}}
                                 <div>
-                                    {{-- Added for="code_number" --}}
                                     <label for="code_number"
                                         class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                                         Code Number
@@ -91,7 +98,7 @@
                                         </span>
                                         <input type="text" id="code_number" name="code_number"
                                             value="{{ old('code_number') }}" required autocomplete="off"
-                                            class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm">
+                                            class="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm @error('code_number') border-red-500 @enderror">
                                     </div>
                                 </div>
                                 {{-- Group ID --}}
@@ -125,7 +132,7 @@
                                         (Ks)</label>
                                     <input type="number" id="price" name="price" value="{{ old('price') }}" required
                                         autocomplete="off"
-                                        class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm"
+                                        class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm @error('price') border-red-500 @enderror"
                                         placeholder="0">
                                 </div>
                                 <div>
@@ -133,7 +140,7 @@
                                         class="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Stock</label>
                                     <input type="number" id="stock" name="stock" value="{{ old('stock', 0) }}" min="0"
                                         required autocomplete="off"
-                                        class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm"
+                                        class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm @error('stock') border-red-500 @enderror"
                                         placeholder="0">
                                 </div>
                                 <div class="flex flex-col justify-end pb-2">
@@ -171,22 +178,6 @@
                                 <img id="image-preview" src="https://placehold.co/600x600?text=Upload+Image"
                                     class="absolute inset-0 w-full h-full object-cover transition-all duration-700 ease-out">
 
-                                <div id="upload-overlay"
-                                    class="absolute inset-0 bg-black/60 z-10 hidden flex-col items-center justify-center backdrop-blur-sm">
-                                    <div class="w-20 h-20 relative flex items-center justify-center">
-                                        <svg class="animate-spin h-full w-full text-blue-500"
-                                            xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                                            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor"
-                                                stroke-width="4"></circle>
-                                            <path class="opacity-75" fill="currentColor"
-                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
-                                            </path>
-                                        </svg>
-                                        <span id="upload-percent" class="absolute text-white font-bold text-sm">0%</span>
-                                    </div>
-                                    <p class="text-white text-sm mt-2 font-medium">Uploading...</p>
-                                </div>
-
                                 <div
                                     class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-30 transition flex items-center justify-center">
                                     <div
@@ -196,7 +187,8 @@
                                 </div>
                             </div>
 
-                            <input type="file" name="image" id="image-input" accept="image/*" class="hidden">
+                            <input type="file" name="image" id="image-input" accept="image/*"
+                                class="hidden @error('image') border-red-500 @enderror">
 
                             <p class="text-xs text-center text-gray-500 dark:text-gray-400">
                                 Click the image to upload.<br>
@@ -234,60 +226,6 @@
                 reader.readAsDataURL(file);
             }
         });
-
-        // AJAX Upload Logic with Progress
-        document.getElementById('product-form').addEventListener('submit', function (e) {
-            e.preventDefault();
-
-            const form = this;
-            const formData = new FormData(form);
-            const overlay = document.getElementById('upload-overlay');
-            const percentText = document.getElementById('upload-percent');
-            const imagePreview = document.getElementById('image-preview');
-            const submitBtn = document.getElementById('submit-btn');
-
-            overlay.classList.remove('hidden');
-            overlay.classList.add('flex');
-            imagePreview.classList.add('blur-sm');
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
-
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', form.action, true);
-            xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
-
-            xhr.upload.onprogress = function (e) {
-                if (e.lengthComputable) {
-                    const percentComplete = Math.round((e.loaded / e.total) * 100);
-                    percentText.textContent = percentComplete + '%';
-                }
-            };
-
-            xhr.onload = function () {
-                if (xhr.status === 200 || xhr.status === 302 || xhr.status === 201) {
-                    percentText.textContent = '100%';
-                    imagePreview.classList.remove('blur-sm');
-                    overlay.innerHTML = '<i class="fas fa-check-circle text-5xl text-green-500 animate-bounce"></i><p class="text-white font-bold mt-2">Saved!</p>';
-                    setTimeout(() => {
-                        window.location.href = "{{ route('admin.products.index') }}";
-                    }, 1000);
-                } else {
-                    alert('Something went wrong! Please check your inputs.');
-                    overlay.classList.add('hidden');
-                    overlay.classList.remove('flex');
-                    imagePreview.classList.remove('blur-sm');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i> Save Product';
-                }
-            };
-
-            xhr.onerror = function () {
-                alert('Network Error');
-                submitBtn.disabled = false;
-            };
-
-            xhr.send(formData);
-        });
     </script>
 
     {{-- Quick Add Category Modal --}}
@@ -298,11 +236,9 @@
             <h3 class="text-lg font-bold text-gray-800 dark:text-white mb-4">Add New Category</h3>
 
             <div class="mb-4">
-                {{-- Added for="new-category-name" --}}
                 <label for="new-category-name" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                     Category Name
                 </label>
-                {{-- Added id is already new-category-name --}}
                 <input type="text" id="new-category-name" autocomplete="off"
                     class="w-full rounded-lg border-gray-300 dark:bg-gray-700 dark:border-gray-600 dark:text-white focus:ring-blue-500 focus:border-blue-500"
                     placeholder="e.g. Smart Watch">
