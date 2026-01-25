@@ -86,8 +86,7 @@
                         <th class="px-6 py-4 font-semibold">Supplier</th>
                         <th class="px-6 py-4 font-semibold">Price</th>
                         <th class="px-6 py-4 font-semibold text-center">Stock</th>
-                        <th class="px-6 py-4 font-semibold text-center">Status</th>
-                        <th class="px-6 py-4 font-semibold text-right">Actions</th>
+                        <th class="px-6 py-4 font-semibold text-center">Actions</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-100 dark:divide-gray-700 text-sm text-gray-700 dark:text-gray-300">
