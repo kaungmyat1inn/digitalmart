@@ -10,11 +10,13 @@ class HomeController extends Controller
 {
     public function index()
     {
-        // Category နဲ့တွဲပြီး Available ဖြစ်တာတွေပဲ ယူမယ်
+
         $products = \App\Models\Product::with(['category', 'variants' => function ($q) {
             $q->with('category');
         }])
-            ->where('stock', '>', 0)
+            ->withCount('orderItems')
+            ->orderByRaw('CASE WHEN stock > 0 THEN 1 ELSE 0 END DESC')
+            ->orderBy('order_items_count', 'desc')
             ->latest()
             ->get();
 

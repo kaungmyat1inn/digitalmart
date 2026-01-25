@@ -29,4 +29,9 @@ class Product extends Model
         return $this->hasMany(Product::class, 'group_id', 'group_id')
             ->where('id', '!=', $this->id);
     }
+
+    public function orderItems()
+    {
+        return $this->hasMany(OrderItem::class);
+    }
 }

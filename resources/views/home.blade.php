@@ -62,6 +62,8 @@
                             {{ $product->category->name }}
                         </span>
 
+
+
                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
                             class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
 
@@ -75,8 +77,12 @@
 
                         <div class="mt-auto pt-2 border-t border-gray-100 flex items-center justify-between">
                             <div class="text-base font-bold text-blue-600">
-                                {{ number_format($product->price) }} <span
-                                    class="text-xs md:text-sm text-gray-500 font-normal">ကျပ်</span>
+                                @if($product->stock > 0)
+                                    {{ number_format($product->price) }} <span
+                                        class="text-xs md:text-sm text-gray-500 font-normal">ကျပ်</span>
+                                @else
+                                    <span class="text-sm text-red-500 font-bold">Out of Stock</span>
+                                @endif
                             </div>
                         </div>
                     </div>
