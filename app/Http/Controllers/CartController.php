@@ -132,6 +132,13 @@ class CartController extends Controller
                     'quantity' => $item['quantity'],
                     'price' => $item['price']
                 ]);
+
+                // Reduce product stock
+                $product = Product::find($id);
+                if ($product) {
+                    $product->stock = max(0, $product->stock - $item['quantity']);
+                    $product->save();
+                }
             }
 
             // Success Session သိမ်းမယ်

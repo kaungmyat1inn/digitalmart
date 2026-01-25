@@ -6,10 +6,61 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Digital Mart</title>
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         body {
             font-family: 'Poppins', sans-serif;
+        }
+
+        /* Pagination Styles */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .pagination .page-item {
+            list-style: none;
+        }
+
+        .pagination .page-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 2.5rem;
+            height: 2.5rem;
+            padding: 0 0.75rem;
+            border-radius: 0.5rem;
+            background-color: white;
+            color: #374151;
+            font-weight: 500;
+            font-size: 0.875rem;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .pagination .page-link:hover {
+            background-color: #eff6ff;
+            border-color: #3b82f6;
+            color: #2563eb;
+        }
+
+        .pagination .page-item.active .page-link {
+            background-color: #3b82f6;
+            border-color: #3b82f6;
+            color: white;
+        }
+
+        .pagination .page-item.disabled .page-link {
+            background-color: transparent;
+            color: #9ca3af;
+            border-color: transparent;
+        }
+
+        .pagination .page-link svg {
+            width: 1rem;
+            height: 1rem;
         }
     </style>
 </head>
@@ -33,15 +84,28 @@
             </a>
 
             <div class="hidden md:flex flex-1 max-w-lg mx-8">
-                <div class="relative w-full">
-                    <input type="text" placeholder="Search products..."
-                        class="w-full bg-gray-100 text-gray-700 rounded-full py-2.5 px-6 pl-12 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="w-5 h-5 text-gray-400 absolute left-4 top-3">
-                        <path stroke-linecap="round" stroke-linejoin="round"
-                            d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
-                    </svg>
-                </div>
+                <form action="{{ route('home') }}" method="GET" class="relative w-full flex items-center">
+                    <input type="text" name="search" placeholder="Search products..."
+                        value="{{ request('search', '') }}"
+                        class="w-full bg-gray-100 text-gray-700 rounded-full py-2.5 pr-24 pl-6 focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                    <div class="absolute right-2 flex items-center gap-1">
+                        @if(request('search'))
+                            <a href="{{ route('home') }}" class="text-gray-400 hover:text-gray-600 p-1.5">
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                    stroke="currentColor" class="w-4 h-4">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </a>
+                        @endif
+                        <button type="submit" class="bg-blue-600 text-white p-1.5 rounded-full hover:bg-blue-700 transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                                stroke="currentColor" class="w-4 h-4">
+                                <path stroke-linecap="round" stroke-linejoin="round"
+                                    d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                            </svg>
+                        </button>
+                    </div>
+                </form>
             </div>
 
             <div class="flex items-center gap-6">

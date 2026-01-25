@@ -8,19 +8,25 @@ use Illuminate\Http\Request;
 
 class HomeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $search = $request->get('search', '');
 
-        $products = \App\Models\Product::with(['category', 'variants' => function ($q) {
-            $q->with('category');
-        }])
+        $products = \App\Models\Product::with(['category', 'variants'])
             ->withCount('orderItems')
+            ->when($search, function ($query, $search) {
+                return $query->where(function ($q) use ($search) {
+                    $q->where('name', 'like', "%{$search}%")
+                        ->orWhere('code_number', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
             ->orderByRaw('CASE WHEN stock > 0 THEN 1 ELSE 0 END DESC')
             ->orderBy('order_items_count', 'desc')
             ->latest()
-            ->get();
+            ->paginate(16);
 
-        return view('home', compact('products'));
+        return view('home', compact('products', 'search'));
     }
     public function trackOrder(Request $request)
     {

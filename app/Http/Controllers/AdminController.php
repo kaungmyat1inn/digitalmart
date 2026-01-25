@@ -138,7 +138,31 @@ class AdminController extends Controller
     public function updateStatus(Request $request)
     {
         $order = Order::findOrFail($request->order_id);
-        $order->status = $request->status;
+        $oldStatus = $order->status;
+        $newStatus = $request->status;
+
+        // If order is being cancelled, restore stock
+        if ($newStatus === 'cancelled' && $oldStatus !== 'cancelled') {
+            foreach ($order->items as $item) {
+                $product = Product::find($item->product_id);
+                if ($product) {
+                    $product->stock += $item->quantity;
+                    $product->save();
+                }
+            }
+        }
+        // If order is being uncancelled (restored from cancelled), reduce stock again
+        elseif ($oldStatus === 'cancelled' && $newStatus !== 'cancelled') {
+            foreach ($order->items as $item) {
+                $product = Product::find($item->product_id);
+                if ($product) {
+                    $product->stock = max(0, $product->stock - $item->quantity);
+                    $product->save();
+                }
+            }
+        }
+
+        $order->status = $newStatus;
         $order->save();
 
         return back()->with('success', 'Order status updated successfully!');

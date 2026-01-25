@@ -37,24 +37,41 @@
 
     <div class="container mx-auto px-4 py-16">
 
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-3xl font-bold text-gray-800">Popular Products</h2>
-            <a href="#" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
-                View All
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                    stroke="currentColor" class="w-4 h-4">
-                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
-                </svg>
-            </a>
-        </div>
+        @if($search)
+            <div class="flex items-center justify-between mb-8">
+                <div>
+                    <h2 class="text-3xl font-bold text-gray-800">Search Results for "{{ $search }}"</h2>
+                    <p class="text-gray-500 mt-1">{{ $products->total() }} products found</p>
+                </div>
+                <a href="{{ route('home') }}" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
+                    Clear Search
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </a>
+            </div>
+        @else
+            <div class="flex items-center justify-between mb-8">
+                <h2 class="text-3xl font-bold text-gray-800">Popular Products</h2>
+                <a href="#" class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1">
+                    View All
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                        stroke="currentColor" class="w-4 h-4">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5" />
+                    </svg>
+                </a>
+            </div>
+        @endif
 
-        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
             @foreach ($products as $product)
-                <div class="bg-gray-50 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group border border-gray-200 flex flex-col h-full cursor-pointer"
-                    onclick="openProductModal(this)" data-id="{{ $product->id }}" data-name="{{ $product->name }}"
-                    data-price="{{ number_format($product->price) }}" data-image="{{ asset('storage/' . $product->image) }}"
-                    data-category="{{ $product->category->name }}" data-code="{{ $product->code_number }}"
-                    data-add-cart-url="{{ route('add_to_cart', $product->id) }}" data-description="{{ $product->description }}">
+                <div class="bg-gray-50 rounded-2xl shadow-md hover:shadow-xl transition-all duration-300 group border border-gray-200 flex flex-col h-full {{ $product->stock > 0 ? 'cursor-pointer' : 'cursor-not-allowed' }}"
+                    onclick="{{ $product->stock > 0 ? 'openProductModal(this)' : '' }}" data-id="{{ $product->id }}"
+                    data-name="{{ $product->name }}" data-price="{{ number_format($product->price) }}"
+                    data-image="{{ asset('storage/' . $product->image) }}" data-category="{{ $product->category->name }}"
+                    data-code="{{ $product->code_number }}" data-add-cart-url="{{ route('add_to_cart', $product->id) }}"
+                    data-description="{{ $product->description }}" data-stock="{{ $product->stock }}">
 
                     <div class="relative overflow-hidden rounded-t-2xl bg-gray-100 aspect-[3/2]">
                         <span
@@ -62,32 +79,44 @@
                             {{ $product->category->name }}
                         </span>
 
-
+                        @if($product->stock <= 0)
+                            <span
+                                class="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md shadow-sm z-10">
+                                Out of Stock
+                            </span>
+                            <div class="absolute inset-0 bg-gray-900/60 z-0"></div>
+                        @endif
 
                         <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
-                            class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                            class="w-full h-full object-cover {{ $product->stock > 0 ? 'group-hover:scale-110 transition duration-500' : 'transition duration-500' }}">
 
                     </div>
 
-                    <div class="p-2 md:p-4 flex flex-col flex-grow">
+                    <div class="p-2 md:p-4 flex flex-col flex-grow {{ $product->stock <= 0 ? 'opacity-60' : '' }}">
 
-                        <h3 class="text-sm font-bold text-gray-800 mb-2 leading-tight group-hover:text-blue-600 transition">
+                        <h3
+                            class="text-sm font-bold text-gray-800 mb-2 leading-tight {{ $product->stock > 0 ? 'group-hover:text-blue-600 transition' : '' }}">
                             {{ $product->name }}
                         </h3>
 
                         <div class="mt-auto pt-2 border-t border-gray-100 flex items-center justify-between">
-                            <div class="text-base font-bold text-blue-600">
-                                @if($product->stock > 0)
+                            @if($product->stock > 0)
+                                <div class="text-base font-bold text-blue-600">
                                     {{ number_format($product->price) }} <span
                                         class="text-xs md:text-sm text-gray-500 font-normal">ကျပ်</span>
-                                @else
-                                    <span class="text-sm text-red-500 font-bold">Out of Stock</span>
-                                @endif
-                            </div>
+                                </div>
+                            @else
+                                <div class="text-sm text-red-500 font-bold">Out of Stock</div>
+                            @endif
                         </div>
                     </div>
                 </div>
             @endforeach
+        </div>
+
+        <!-- Pagination -->
+        <div class="mt-12">
+            {{ $products->links() }}
         </div>
 
     </div>
@@ -164,7 +193,7 @@
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                         d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
                                 </svg>
-                                အဝယ်စာရင်းထဲထည့်ပါ
+                                အဝယ်စာရင်းထဲထည့်ပါ
                             </a>
                         </div>
                     </div>
@@ -174,7 +203,9 @@
     </div>
 
     <script>
-        window.productsData = @json($products);
+        // Get products data from the current page for modal
+        const getCurrentProducts = () => @json($products->items());
+
         function openProductModal(element) {
             const modal = document.getElementById('productModal');
             const data = element.dataset;
@@ -190,15 +221,16 @@
             // Description
             document.getElementById('modalDescription').textContent = data.description || 'No description available.';
 
-            // Variants
+            // Variants - fetch from all products via AJAX or use current page data
             let variants = [];
-            if (window.productsData) {
-                const currentId = parseInt(data.id);
-                const currentProduct = window.productsData.find(p => p.id == currentId);
-                if (currentProduct && currentProduct.variants && currentProduct.variants.length > 0) {
-                    variants = currentProduct.variants;
-                }
+            const currentId = parseInt(data.id);
+            const currentProducts = getCurrentProducts();
+            const currentProduct = currentProducts.find(p => p.id == currentId);
+
+            if (currentProduct && currentProduct.variants && currentProduct.variants.length > 0) {
+                variants = currentProduct.variants;
             }
+
             const variantsDiv = document.getElementById('modalVariants');
             variantsDiv.innerHTML = '';
             if (variants.length > 0) {

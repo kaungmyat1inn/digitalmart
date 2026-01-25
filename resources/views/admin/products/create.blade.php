@@ -47,7 +47,6 @@
                                     Product Name
                                 </label>
                                 <input type="text" id="name" name="name" value="{{ old('name') }}" required
-                                    autocomplete="off"
                                     class="w-full px-4 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition shadow-sm placeholder-gray-400 @error('name') border-red-500 @enderror"
                                     placeholder="Enter product name">
                             </div>
