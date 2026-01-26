@@ -6,17 +6,6 @@
     </div>
 @endif
 
-<!-- Toast Notification -->
-<div id="toast"
-    class="fixed bottom-4 right-4 z-50 hidden transform transition-all duration-500 translate-y-full opacity-0">
-    <div class="bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3">
-        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
-        </svg>
-        <span id="toastMessage">Success!</span>
-    </div>
-</div>
-
 @section('content')
     <!-- Hero Section -->
     <div class="relative bg-gradient-to-br from-indigo-900 via-blue-800 to-purple-900 text-white overflow-hidden">
