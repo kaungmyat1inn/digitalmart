@@ -367,7 +367,6 @@
     <script>
         // Get products data from the current page for modal
         const getCurrentProducts = () => @json($products->items());
-        let selectedVariantId = null;
 
         // Toast notification
         function showToast(message, type = 'success') {
@@ -417,9 +416,6 @@
             const modalPanel = document.getElementById('modalPanel');
             const data = element.dataset;
 
-            // Reset selected variant
-            selectedVariantId = null;
-
             // Populate Modal Data
             document.getElementById('modalImage').src = data.image;
             document.getElementById('modalCategory').textContent = data.category;
@@ -461,6 +457,9 @@
                     btn.className = 'px-4 py-2 rounded-xl border-2 border-gray-200 bg-white text-gray-700 text-sm font-semibold hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-all duration-300 cursor-pointer';
                     btn.textContent = `${variant.name} (${variant.code_number})`;
                     btn.onclick = function () {
+                        // Save the selected variant ID before opening new modal
+                        const targetVariantId = variant.id;
+                        
                         // Remove selected state from all buttons
                         document.querySelectorAll('#modalVariants button').forEach(b => {
                             b.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
@@ -469,11 +468,35 @@
                         // Add selected state to clicked button
                         btn.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
                         btn.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
-                        selectedVariantId = variant.id;
 
                         // Open variant product
                         const el = document.querySelector(`[data-id="${variant.id}"]`);
-                        if (el) openProductModal(el);
+                        if (el) {
+                            // Store variant to select after modal opens
+                            window.variantToSelect = targetVariantId;
+                            openProductModal(el);
+                            
+                            // After modal opens, find and select the corresponding variant button
+                            setTimeout(() => {
+                                const newVariantsDiv = document.getElementById('modalVariants');
+                                if (newVariantsDiv && window.variantToSelect) {
+                                    const newButtons = newVariantsDiv.querySelectorAll('button');
+                                    // Find button with matching variant data (using data attributes or text)
+                                    newButtons.forEach((b, index) => {
+                                        const currentProducts = getCurrentProducts();
+                                        const modalProduct = currentProducts.find(p => p.id == parseInt(el.dataset.id));
+                                        if (modalProduct && modalProduct.variants && modalProduct.variants[index]) {
+                                            const v = modalProduct.variants[index];
+                                            if (v.id == window.variantToSelect) {
+                                                b.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
+                                                b.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
+                                            }
+                                        }
+                                    });
+                                }
+                                window.variantToSelect = null;
+                            }, 50);
+                        }
                     };
                     variantsDiv.appendChild(btn);
                 });
