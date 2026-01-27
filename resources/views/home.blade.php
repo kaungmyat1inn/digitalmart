@@ -238,14 +238,6 @@
                                         <span class="text-xl font-bold text-blue-600">{{ number_format($product->price) }}</span>
                                         <span class="text-sm text-gray-500">ကျပ်</span>
                                     </div>
-                                    <button onclick="event.stopPropagation(); addToCart({{ $product->id }}, this)"
-                                        class="add-to-cart-btn bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white p-2.5 rounded-full shadow-lg transition-all duration-300 transform hover:scale-110 hover:shadow-xl">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                        </svg>
-                                    </button>
                                 @else
                                     <span class="text-red-500 font-bold">Out of Stock</span>
                                 @endif
@@ -393,64 +385,6 @@
                 toast.classList.add('translate-y-full', 'opacity-0');
                 setTimeout(() => toast.classList.add('hidden'), 500);
             }, 3000);
-        }
-
-        // Add to cart function - AJAX version
-        function addToCart(productId, btnElement = null) {
-            const url = `/add-to-cart/${productId}`;
-
-            // Show loading state on button
-            if (btnElement) {
-                const originalContent = btnElement.innerHTML;
-                btnElement.dataset.originalHtml = originalContent;
-                btnElement.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
-                btnElement.disabled = true;
-
-                // Restore after timeout (fallback)
-                setTimeout(() => {
-                    if (btnElement.dataset.originalHtml) {
-                        btnElement.innerHTML = btnElement.dataset.originalHtml;
-                    }
-                    btnElement.disabled = false;
-                }, 10000);
-            }
-
-            fetch(url, {
-                method: 'GET',
-                headers: {
-                    'X-Requested-With': 'XMLHttpRequest',
-                    'Accept': 'application/json'
-                }
-            })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    // Update cart count in header
-                    updateCartCount();
-
-                    // Show success message
-                    showToast(data.message || 'Added to cart! 🛒');
-
-                    // Restore button if it was loading
-                    if (btnElement && btnElement.dataset.originalHtml) {
-                        btnElement.innerHTML = btnElement.dataset.originalHtml;
-                        btnElement.disabled = false;
-                    }
-                })
-                .catch(error => {
-                    console.error('Error adding to cart:', error);
-                    showToast('Error adding to cart!', 'error');
-
-                    // Restore button
-                    if (btnElement && btnElement.dataset.originalHtml) {
-                        btnElement.innerHTML = btnElement.dataset.originalHtml;
-                        btnElement.disabled = false;
-                    }
-                });
         }
 
         // Update cart count in header
