@@ -57,7 +57,7 @@
                             </svg>
                             Shop Now
                         </button>
-                        <button onclick="trackOrderScroll()"
+                        <button onclick="window.location.href='{{ route('track_order') }}'"
                             class="group bg-transparent border-2 border-white/30 hover:border-white text-white font-bold py-4 px-8 rounded-full transition-all duration-300 hover:bg-white/10 flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
                                 stroke="currentColor">
@@ -168,7 +168,6 @@
             @endif
 
             <!-- Products Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 md:gap-6">
                 @foreach ($products as $product)
                     <div class="group bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden transform hover:-translate-y-2 {{ $product->stock > 0 ? 'cursor-pointer' : 'cursor-not-allowed opacity-75' }}"
                         onclick="{{ $product->stock > 0 ? 'openProductModal(this)' : '' }}" data-id="{{ $product->id }}"
@@ -411,11 +410,6 @@
         // Scroll to products
         function scrollToProducts() {
             document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // Track order scroll
-        function trackOrderScroll() {
-            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
         function openProductModal(element) {
