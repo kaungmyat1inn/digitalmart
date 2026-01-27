@@ -193,7 +193,7 @@
     @if (session('order_success'))
         <div
             class="fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center z-[60] backdrop-blur-sm overflow-y-auto">
-            <div class="relative w-full max-w-sm mx-4 my-10">
+            <div class="relative w-[85%] max-w-md mx-4 my-8">
 
                 <button onclick="this.closest('.fixed').remove()"
                     class="absolute -top-10 right-0 text-white hover:text-gray-200">
@@ -205,12 +205,12 @@
 
                 <div id="receipt-content" class="bg-white rounded-t-2xl rounded-b-xl shadow-2xl overflow-hidden relative">
 
-                    <div class="h-2 bg-green-500 w-full"></div>
+                    <div class="h-1.5 bg-green-500 w-full"></div>
 
-                    <div class="p-6">
-                        <div class="text-center mb-6">
-                            <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-green-100 mb-3">
-                                <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="p-4">
+                        <div class="text-center mb-4">
+                            <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-green-100 mb-2">
+                                <svg class="h-7 w-7 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7">
                                     </path>
                                 </svg>
@@ -220,9 +220,9 @@
                                 အော်ဒါအခြေအနေကိုစစ်ဆေးနိုင်ပါသည်</p>
                         </div>
 
-                        <div class="border-b-2 border-dashed border-gray-200 mb-6"></div>
+                        <div class="border-b-2 border-dashed border-gray-200 mb-4"></div>
 
-                        <div class="space-y-3 text-sm text-black mb-6">
+                        <div class="space-y-2 text-sm text-black mb-4">
                             <div class="flex justify-between items-start">
                                 <span class="text-black min-w-[100px]">ရက်စွဲ</span>
                                 <span class="font-semibold text-right">{{ session('order_success')['date'] }}</span>
@@ -242,10 +242,10 @@
                             </div>
                         </div>
 
-                        <div class="bg-white rounded-lg p-4 border border-gray-100">
+                        <div class="bg-white rounded-lg p-3 border border-gray-100">
                             <p class="text-xs text-black font-bold uppercase mb-3 tracking-wider">မှာယူမည့်ပစ္စည်းများ</p>
 
-                            <div class="space-y-3">
+                            <div class="space-y-2">
                                 @foreach (session('order_success')['items'] as $item)
                                     <div class="flex justify-between items-start text-sm group">
                                         <div class="pr-4">
@@ -266,19 +266,19 @@
                             </div>
                         </div>
 
-                        <div class="mt-6 text-center">
+                        <div class="mt-4 text-center">
                             <p class="text-xs text-gray-400">Thank you for shopping with Digital Mart!</p>
                         </div>
                     </div>
 
-                    <div class="relative h-4 bg-gray-100"
-                        style="background-image: radial-gradient(circle, transparent 50%, #ffffff 50%); background-size: 10px 10px; background-position: 0 5px;">
+                    <div class="relative h-3 bg-gray-100"
+                        style="background-image: radial-gradient(circle, transparent 50%, #ffffff 50%); background-size: 8px 8px; background-position: 0 4px;">
                     </div>
                 </div>
 
-                <div class="mt-4 space-y-3">
+                <div class="mt-3 space-y-2">
                     <button id="saveScreenshotBtn"
-                        class="w-full flex items-center justify-center bg-white text-gray-800 py-3.5 rounded-xl font-bold hover:bg-gray-50 transition shadow-lg gap-2">
+                        class="w-full flex items-center justify-center bg-white text-gray-800 py-2.5 rounded-lg font-bold hover:bg-gray-50 transition shadow gap-2 text-sm">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                             stroke="currentColor" class="w-5 h-5 text-gray-600">
                             <path stroke-linecap="round" stroke-linejoin="round"
@@ -287,11 +287,9 @@
                         Save Receipt Image
                     </button>
 
-                    <p class="text-center text-white/80 text-xs pt-2">Contact Admin via:</p>
-
-                    <div class="grid grid-cols-2 gap-3">
+                    <div class="grid grid-cols-2 gap-2">
                         <a href="viber://chat?number=959772793448"
-                            class="flex items-center justify-center bg-[#7360f2] text-white py-3 rounded-xl font-bold hover:bg-[#5e4ad1] transition shadow-lg gap-2">
+                            class="flex items-center justify-center bg-[#7360f2] text-white py-2 rounded-lg font-bold hover:bg-[#5e4ad1] transition shadow gap-1.5 text-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -304,7 +302,7 @@
                         </a>
 
                         <a href="https://t.me/mmdigitalmart" target="_blank"
-                            class="flex items-center justify-center bg-[#0088cc] text-white py-3 rounded-xl font-bold hover:bg-[#0077b5] transition shadow-lg gap-2">
+                            class="flex items-center justify-center bg-[#0088cc] text-white py-2 rounded-lg font-bold hover:bg-[#0077b5] transition shadow gap-1.5 text-sm">
                             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                                 stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -315,7 +313,7 @@
                     </div>
 
                     <button onclick="window.location.href='{{ route('home') }}'"
-                        class="block w-full text-center text-white/60 hover:text-white text-sm pt-4 pb-10">
+                        class="block w-full text-center text-white/60 hover:text-white text-xs pt-3 pb-6">
                         &larr; Back to Shopping
                     </button>
                 </div>
