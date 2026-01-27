@@ -10,9 +10,9 @@
                 <form action="{{ route('track_order') }}" method="GET">
                     <div class="space-y-4">
                         <div>
-                            <label class="block text-sm font-medium text-gray-700 mb-1">Order Number (အော်ဒါနံပါတ်)</label>
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Order No(အော်ဒါနံပါတ်)</label>
                             <input type="text" name="order_number" value="{{ request('order_number') }}" required
-                                autocomplete="off" placeholder="ORD-XXXXXXXX"
+                                autocomplete="off" placeholder="Order Number"
                                 class="w-full border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
                         </div>
                         <div>

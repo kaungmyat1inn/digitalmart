@@ -271,13 +271,6 @@
         
             <div class="border-t border-dashed border-gray-400 my-4"></div>
         
-            <div class="text-xs space-y-1 italic">
-                <div class="flex justify-between">
-                    <span class="text-gray-600 not-italic">Store Operator</span>
-                    <span class="font-bold">System Admin</span>
-                </div>
-            </div>
-        
             <div class="mt-8 text-center">
                 <p class="text-[10px] uppercase mt-2 text-gray-500">Thank you for your business!</p>
             </div>

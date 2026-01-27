@@ -164,7 +164,7 @@
                         <input type="tel" name="phone" id="phoneInput" required inputmode="numeric"
                             class="w-full border-gray-300 rounded-lg shadow-sm focus:border-blue-500 focus:ring-blue-500 p-2.5 bg-gray-50"
                             placeholder="09xxxxxxxxx">
-                        <p class="text-xs text-gray-400 mt-1">အင်္ဂလိပ် (သို့) မြန်မာဂဏန်း ရိုက်ထည့်နိုင်ပါသည်</p>
+                        <p class="text-xs text-gray-400 mt-1">ဆက်သွယ်ရန်ဖုန်းနံပါတ်လိုအပ်ပါသည်</p>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Address (လိပ်စာ)</label>
@@ -222,40 +222,40 @@
 
                         <div class="border-b-2 border-dashed border-gray-200 mb-6"></div>
 
-                        <div class="space-y-3 text-sm text-gray-700 mb-6">
+                        <div class="space-y-3 text-sm text-black mb-6">
                             <div class="flex justify-between items-start">
-                                <span class="text-gray-500 min-w-[100px]">ရက်စွဲ</span>
+                                <span class="text-black min-w-[100px]">ရက်စွဲ</span>
                                 <span class="font-semibold text-right">{{ session('order_success')['date'] }}</span>
                             </div>
                             <div class="flex justify-between items-start">
-                                <span class="text-gray-500 min-w-[100px]">အော်ဒါနံပါတ်</span>
+                                <span class="text-black min-w-[100px]">အော်ဒါနံပါတ်</span>
                                 <span
-                                    class="font-bold text-blue-600 text-right">{{ session('order_success')['order_number'] }}</span>
+                                    class="font-bold text-black text-right">{{ session('order_success')['order_number'] }}</span>
                             </div>
                             <div class="flex justify-between items-start">
-                                <span class="text-gray-500 min-w-[100px]">အမည်</span>
-                                <span class="font-bold text-blue-600 text-right">{{ session('order_success')['name'] }}</span>
+                                <span class="text-black min-w-[100px]">အမည်</span>
+                                <span class="font-bold text-black text-right">{{ session('order_success')['name'] }}</span>
                             </div>
                             <div class="flex justify-between items-start">
-                                <span class="text-gray-500 min-w-[100px]">ဖုန်းနံပါတ်</span>
-                                <span class="font-bold text-blue-600 text-right">{{ session('order_success')['phone'] }}</span>
+                                <span class="text-black min-w-[100px]">ဖုန်းနံပါတ်</span>
+                                <span class="font-bold text-black text-right">{{ session('order_success')['phone'] }}</span>
                             </div>
                         </div>
 
-                        <div class="bg-gray-50 rounded-lg p-4 border border-gray-100">
-                            <p class="text-xs text-gray-400 font-bold uppercase mb-3 tracking-wider">Items Purchased</p>
+                        <div class="bg-white rounded-lg p-4 border border-gray-100">
+                            <p class="text-xs text-black font-bold uppercase mb-3 tracking-wider">မှာယူမည့်ပစ္စည်းများ</p>
 
                             <div class="space-y-3">
                                 @foreach (session('order_success')['items'] as $item)
                                     <div class="flex justify-between items-start text-sm group">
                                         <div class="pr-4">
                                             {{-- Product Name --}}
-                                            <span class="text-gray-800 font-medium leading-relaxed block">
+                                            <span class="text-black font-medium leading-relaxed block">
                                                 {{ $item['name'] }}
                                             </span>
                                             {{-- Code Number (New Addition) --}}
-                                            <p class="text-xs text-gray-500 mt-0.5">
-                                                Code: <span class="text-blue-600 font-bold">{{ $item['code_number'] ?? '' }}</span>
+                                            <p class="text-xs text-black mt-0.5">
+                                                Code: <span class="text-black font-bold">{{ $item['code_number'] ?? '' }}</span>
                                             </p>
                                         </div>
                                         <span class="font-bold text-gray-600 whitespace-nowrap pt-0.5">x

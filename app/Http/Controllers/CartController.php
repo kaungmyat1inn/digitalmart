@@ -140,7 +140,7 @@ class CartController extends Controller
 
             // Order Create
             $order = Order::create([
-                'order_number' => 'ORD-' . strtoupper(uniqid()),
+                'order_number' => strtoupper(uniqid()),
                 'customer_name' => $request->name,
                 'customer_phone' => $request->phone,
                 'address' => $request->address,
