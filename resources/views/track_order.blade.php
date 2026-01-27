@@ -28,6 +28,21 @@
                     </div>
                 </form>
 
+                {{-- QR Code Upload Section --}}
+                <div class="mt-6 border-t border-gray-200 pt-6">
+                    <p class="text-sm text-gray-600 text-center mb-3">သို့မဟုတ် QR Code ဓါတ်ပုံ Upload လုပ်ပါ</p>
+                    <div class="flex justify-center">
+                        <label class="cursor-pointer flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-4 py-2 rounded-lg transition">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                            </svg>
+                            <span class="text-sm font-medium text-gray-700">Upload QR Code</span>
+                            <input type="file" id="qrUpload" accept="image/*" class="hidden">
+                        </label>
+                    </div>
+                    <p id="qrStatus" class="text-xs text-center mt-2 text-gray-500"></p>
+                </div>
+
                 @if (session('error'))
                     <div class="mt-4 p-3 bg-red-100 text-red-700 rounded-lg text-sm text-center">
                         {{ session('error') }}
@@ -192,4 +207,64 @@
 
         </div>
     </div>
+
+    {{-- QR Code Scanning Script --}}
+    <script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js"></script>
+    <script>
+        document.getElementById('qrUpload')?.addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const statusEl = document.getElementById('qrStatus');
+            statusEl.textContent = 'Reading QR Code...';
+            statusEl.className = 'text-xs text-center mt-2 text-blue-500';
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    canvas.width = img.width;
+                    canvas.height = img.height;
+                    ctx.drawImage(img, 0, 0);
+                    
+                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const code = jsQR(imageData.data, imageData.width, imageData.height);
+                    
+                    if (code) {
+                        try {
+                            const data = JSON.parse(code.data);
+                            if (data.order_number && data.phone) {
+                                statusEl.textContent = 'QR Code found! Redirecting...';
+                                statusEl.className = 'text-xs text-center mt-2 text-green-500 font-bold';
+                                setTimeout(() => {
+                                    window.location.href = `{{ route('track_order') }}?order_number=${data.order_number}&phone=${data.phone}`;
+                                }, 1000);
+                                return;
+                            }
+                        } catch (err) {
+                            // Not JSON, try direct URL format
+                            const urlParams = new URLSearchParams(code.data.split('?')[1]);
+                            if (urlParams.has('order_number') && urlParams.has('phone')) {
+                                statusEl.textContent = 'QR Code found! Redirecting...';
+                                statusEl.className = 'text-xs text-center mt-2 text-green-500 font-bold';
+                                setTimeout(() => {
+                                    window.location.href = `{{ route('track_order') }}?order_number=${urlParams.get('order_number')}&phone=${urlParams.get('phone')}`;
+                                }, 1000);
+                                return;
+                            }
+                        }
+                        statusEl.textContent = 'Invalid QR Code format';
+                        statusEl.className = 'text-xs text-center mt-2 text-red-500';
+                    } else {
+                        statusEl.textContent = 'No QR Code found in image. Please try again.';
+                        statusEl.className = 'text-xs text-center mt-2 text-red-500';
+                    }
+                };
+                img.src = event.target.result;
+            };
+            reader.readAsDataURL(file);
+        });
+    </script>
 @endsection

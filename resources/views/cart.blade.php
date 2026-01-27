@@ -266,6 +266,19 @@
                             </div>
                         </div>
 
+                        {{-- QR Code Section --}}
+                        @if (session('order_success')['qr_code'] ?? false)
+                        <div class="mt-4 bg-white rounded-lg p-3 border border-gray-100 text-center">
+                            <p class="text-xs text-black font-bold uppercase mb-2 tracking-wider">QR Code ဖြင့် အော်ဒါရှာရန်</p>
+                            <div class="flex justify-center">
+                                <img src="data:image/png;base64,{{ session('order_success')['qr_code'] }}" 
+                                     alt="Order QR Code" 
+                                     class="w-32 h-32 border rounded-lg p-1">
+                            </div>
+                            <p class="text-[10px] text-gray-500 mt-2">ဤ QR Code ကို Scan ဖတ်၍ သို့မဟုတ် ဓါတ်ပုံရိုက်ကာ Upload လုပ်ပြီး အော်ဒါအခြေအနေကို စစ်ဆေးနိုင်ပါသည်။</p>
+                        </div>
+                        @endif
+
                         <div class="mt-4 text-center">
                             <p class="text-xs text-gray-400">Thank you for shopping with Digital Mart!</p>
                         </div>

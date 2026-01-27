@@ -7,6 +7,8 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\OrderItem;
 use Illuminate\Support\Facades\DB;
+use Endroid\QrCode\QrCode;
+use Endroid\QrCode\Writer\PngWriter;
 
 class CartController extends Controller
 {
@@ -167,12 +169,24 @@ class CartController extends Controller
             }
 
             // Success Session သိမ်းမယ်
+            // Generate QR Code for order tracking
+            $qrData = json_encode([
+                'order_number' => $order->order_number,
+                'phone' => $request->phone
+            ]);
+            $qrCode = new QrCode($qrData);
+            $qrCode->setSize(200);
+            $writer = new PngWriter();
+            $result = $writer->write($qrCode);
+            $qrCodeImage = base64_encode($result->getString());
+            
             session()->flash('order_success', [
                 'order_number' => $order->order_number,
                 'date' => now()->timezone('Asia/Yangon')->format('d/m/Y h:i A'),
                 'items' => $cart, // အပေါ်မှာ code_number နဲ့ ပြင်ထားလို့ ဒီမှာ Auto ပါလာပါလိမ့်မယ်
                 'name' => $request->name,
                 'phone' => $request->phone,
+                'qr_code' => $qrCodeImage,
             ]);
 
             // Cart ရှင်းမယ်
