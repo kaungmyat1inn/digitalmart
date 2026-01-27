@@ -216,8 +216,7 @@
                                 </svg>
                             </div>
                             <h3 class="text-xl font-bold text-gray-900">အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်</h3>
-                            <p class="text-sm text-gray-500 mt-1">အော်ဒါနံပါတ်နှင့် ဖုန်းနံပါတ်ကိုအသုံးပြု၍ Track Order တွင်
-                                အော်ဒါအခြေအနေကိုစစ်ဆေးနိုင်ပါသည်</p>
+                            
                         </div>
 
                         <div class="border-b-2 border-dashed border-gray-200 mb-4"></div>
@@ -243,7 +242,7 @@
                         </div>
 
                         <div class="bg-white rounded-lg p-3 border border-gray-100">
-                            <p class="text-xs text-black font-bold uppercase mb-3 tracking-wider">မှာယူမည့်ပစ္စည်းများ</p>
+                            <p class="text-xs text-black font-bold uppercase mb-3 tracking-wider">Items</p>
 
                             <div class="space-y-2">
                                 @foreach (session('order_success')['items'] as $item)
@@ -269,7 +268,6 @@
                         {{-- QR Code Section --}}
                         @if (session('order_success')['qr_code'] ?? false)
                         <div class="mt-4 bg-white rounded-lg p-3 border border-gray-100 text-center">
-                            <p class="text-xs text-black font-bold uppercase mb-2 tracking-wider">QR Code ဖြင့် အော်ဒါရှာရန်</p>
                             <div class="flex justify-center">
                                 <img src="data:image/png;base64,{{ session('order_success')['qr_code'] }}" 
                                      alt="Order QR Code" 
