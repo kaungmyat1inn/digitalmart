@@ -178,65 +178,114 @@
         {{-- ======================================================== --}}
         {{-- HIDDEN INVOICE TEMPLATE (For Print & Image Save Only) --}}
         {{-- ======================================================== --}}
-        <div id="invoice-print-area" class="hidden print:block bg-white p-10 max-w-3xl mx-auto text-black">
-            <div class="flex justify-between items-start mb-8 border-b-2 border-gray-800 pb-4">
-                <div>
-                    <h1 class="text-4xl font-bold text-gray-900 mb-2">INVOICE</h1>
-                    <p class="text-gray-600 font-bold">Digital Mart</p>
-                    <p class="text-sm text-gray-500">No.123, Tech Street, Yangon</p>
-                    <p class="text-sm text-gray-500">Phone: 09-9772793448</p>
+        <div id="invoice-print-area" class="hidden print:block bg-white p-6 max-w-sm mx-auto text-black font-mono shadow-lg border border-gray-100">
+            <style>
+                @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+Myanmar:wght@400;700&display=swap');
+                
+                .mm-font {
+                    font-family: 'Noto Sans Myanmar', sans-serif !important;
+                    line-height: 1.6;
+                }
+                @media print {
+    /* Set the page size to match thermal paper (80mm is standard) */
+    @page {
+        size: 80mm auto;
+        margin: 0;
+    }
+
+    body {
+        background: white;
+        margin: 0;
+        padding: 0;
+        -webkit-print-color-adjust: exact;
+    }
+
+    /* Force the container to fill the thermal paper width */
+    #invoice-print-area {
+        display: block !important;
+        width: 100%;
+        max-width: 100%;
+        box-shadow: none;
+        border: none;
+        padding: 10px; /* Small padding so text isn't touching the edge */
+    }
+
+    /* Hide everything else on the page when printing */
+    nav, footer, .no-print {
+        display: none !important;
+    }
+}
+            </style>
+        
+            <div class="text-center mb-6">
+                <h1 class="text-2xl font-black tracking-widest leading-none">DIGITAL MART</h1>
+                <p class="text-[10px] tracking-[0.3em] uppercase mb-2">Tech Solutions</p>
+                <p class="text-xs">{{ $order->created_at->format('D, M d, Y • h:i:s A') }}</p>
+            </div>
+        
+            <div class="relative border border-dashed border-black p-4 mb-6 text-center">
+                <span class="absolute -top-3 left-1/2 -translate-x-1/2 bg-white px-2 text-xs font-bold uppercase tracking-tighter">Order No</span>
+                <div class="text-lg font-bold tracking-wider">{{ $order->order_number }}</div>
+            </div>
+        
+            <div class="text-xs space-y-1 mb-4 mm-font">
+                <div class="flex justify-between items-start">
+                    <span class="text-gray-600 font-mono">Customer Name</span>
+                    <span class="font-bold text-right">{{ $order->customer_name }}</span>
                 </div>
-                <div class="text-right">
-                    <p class="text-xl font-bold text-gray-800">#{{ $order->order_number }}</p>
-                    <p class="text-sm text-gray-600">Date: {{ $order->created_at->format('d M Y') }}</p>
+                <div class="flex justify-between items-start">
+                    <span class="text-gray-600 font-mono">Contact</span>
+                    <span class="font-bold">{{ $order->customer_phone }}</span>
+                </div>
+                <div class="flex justify-between items-start">
+                    <span class="text-gray-600 font-mono">Address</span>
+                    <span class="font-bold text-right max-w-[180px] leading-relaxed">{{ $order->address }}</span>
                 </div>
             </div>
-
-            <div class="flex justify-between mb-8">
+        
+            <div class="border-t border-dashed border-gray-400 my-4"></div>
+        
+            <div class="text-xs space-y-4">
+                @foreach ($order->items as $item)
                 <div>
-                    <p class="text-xs font-bold text-gray-500 uppercase mb-1">Bill To:</p>
-                    <h3 class="text-lg font-bold text-gray-900">{{ $order->customer_name }}</h3>
-                    <p class="text-gray-600">{{ $order->customer_phone }}</p>
-                    <p class="text-gray-600 max-w-xs">{{ $order->address }}</p>
-                </div>
-            </div>
-
-            <table class="w-full mb-8 border-collapse">
-                <thead>
-                    <tr class="border-b-2 border-gray-800">
-                        <th class="text-left py-3 font-bold text-gray-900 uppercase text-sm">Item</th>
-                        <th class="text-center py-3 font-bold text-gray-900 uppercase text-sm">Qty</th>
-                        <th class="text-right py-3 font-bold text-gray-900 uppercase text-sm">Price</th>
-                        <th class="text-right py-3 font-bold text-gray-900 uppercase text-sm">Total</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach ($order->items as $item)
-                        <tr class="border-b border-gray-200">
-                            <td class="py-4">
-                                <p class="font-bold text-gray-800">{{ $item->product->name ?? 'Deleted Product' }}</p>
-                                <p class="text-xs text-gray-500 font-bold">{{ $item->product->code_number ?? '' }}</p>
-                            </td>
-                            <td class="text-center py-4 text-gray-700">{{ $item->quantity }}</td>
-                            <td class="text-right py-4 text-gray-700">{{ number_format($item->price) }}</td>
-                            <td class="text-right py-4 font-bold text-gray-900">
-                                {{ number_format($item->price * $item->quantity) }}</td>
-                        </tr>
-                    @endforeach
-                </tbody>
-            </table>
-
-            <div class="flex justify-end">
-                <div class="w-64">
-                    <div class="flex justify-between py-2 border-t-2 border-gray-800">
-                        <span class="font-bold text-xl text-gray-900">Total</span>
-                        <span class="font-bold text-xl text-blue-700">{{ number_format($order->total_amount) }} Ks</span>
+                    <div class="flex justify-between font-bold">
+                        <span class="uppercase italic">{{ $item->product->name ?? 'Deleted Product' }}</span>
+                        <span>{{ number_format($item->price * $item->quantity) }} Ks</span>
+                    </div>
+                    <div class="flex justify-between text-gray-600">
+                        <span>{{ $item->quantity }} x {{ number_format($item->price) }}</span>
+                        <span>{{ $item->product->code_number ?? '' }}</span>
                     </div>
                 </div>
+                @endforeach
             </div>
-
-            <div class="mt-12 text-center text-sm text-gray-500 border-t pt-4">
-                <p>Thank you for your business!</p>
+        
+            <div class="border-t border-dashed border-gray-400 my-4"></div>
+        
+            <div class="space-y-1">
+                <div class="flex justify-between text-sm font-black">
+                    <span class="uppercase">Total Amount</span>
+                    <span>{{ number_format($order->total_amount) }} Ks</span>
+                </div>
+            </div>
+        
+            <div class="border-t border-dashed border-gray-400 my-4"></div>
+        
+            <div class="text-xs space-y-1 italic">
+                <div class="flex justify-between">
+                    <span class="text-gray-600 not-italic">Store Operator</span>
+                    <span class="font-bold">System Admin</span>
+                </div>
+            </div>
+        
+            <div class="mt-8 text-center">
+                <p class="text-[10px] uppercase mt-2 text-gray-500">Thank you for your business!</p>
+            </div>
+            
+            <div class="mt-4 flex overflow-hidden h-2 opacity-10">
+                @for ($i = 0; $i < 30; $i++)
+                    <div class="w-3 h-3 bg-black rotate-45 transform -translate-y-1/2 shrink-0 mr-1"></div>
+                @endfor
             </div>
         </div>
         {{-- End Invoice Template --}}
