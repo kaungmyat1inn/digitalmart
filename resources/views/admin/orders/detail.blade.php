@@ -220,6 +220,7 @@
             <div class="text-center mb-6">
                 <h1 class="text-2xl font-black tracking-widest leading-none">DIGITAL MART</h1>
                 <p class="text-[10px] tracking-[0.3em] uppercase mb-2">Tech Solutions</p>
+                <p classs="shopphone text-black">09772793448</p>
                 <p class="text-xs">{{ $order->created_at->format('D, M d, Y • h:i:s A') }}</p>
             </div>
         
