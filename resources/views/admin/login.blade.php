@@ -65,17 +65,6 @@
                 </button>
             </form>
 
-            <!-- Demo Credentials -->
-            <div class="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <p class="text-sm font-semibold text-gray-700 mb-2">Demo Credentials:</p>
-                <p class="text-sm text-gray-600">
-                    <span class="font-mono bg-white px-2 py-1 rounded">digitalmart.mag@gmail.com</span>
-                </p>
-                <p class="text-sm text-gray-600">
-                    <span class="font-mono bg-white px-2 py-1 rounded">123456</span>
-                </p>
-            </div>
-
             <!-- Footer -->
             <div class="mt-6 text-center">
                 <a href="{{ route('home') }}" class="text-blue-600 hover:text-blue-800 font-medium text-sm">
