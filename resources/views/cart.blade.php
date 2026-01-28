@@ -205,8 +205,6 @@
 
                 <div id="receipt-content" class="bg-white rounded-t-2xl rounded-b-xl shadow-2xl overflow-hidden relative">
 
-                    <div class="h-1.5 bg-green-500 w-full"></div>
-
                     <div class="p-4">
                         <div class="text-center mb-4">
                             <div class="mx-auto flex items-center justify-center h-14 w-14 rounded-full bg-green-100 mb-2">
@@ -216,7 +214,7 @@
                                 </svg>
                             </div>
                             <h3 class="text-xl font-bold text-gray-900">အော်ဒါတင်ခြင်း အောင်မြင်ပါသည်</h3>
-                            
+
                         </div>
 
                         <div class="border-b-2 border-dashed border-gray-200 mb-4"></div>
@@ -267,14 +265,14 @@
 
                         {{-- QR Code Section --}}
                         @if (session('order_success')['qr_code'] ?? false)
-                        <div class="mt-4 bg-white rounded-lg p-3 border border-gray-100 text-center">
-                            <div class="flex justify-center">
-                                <img src="data:image/png;base64,{{ session('order_success')['qr_code'] }}" 
-                                     alt="Order QR Code" 
-                                     class="w-32 h-32 border rounded-lg p-1">
+                            <div class="mt-4 bg-white rounded-lg p-3 border border-gray-100 text-center">
+                                <div class="flex justify-center">
+                                    <img src="data:image/png;base64,{{ session('order_success')['qr_code'] }}" alt="Order QR Code"
+                                        class="w-32 h-32 border rounded-lg p-1">
+                                </div>
+                                <p class="text-[10px] text-gray-500 mt-2">ဤ QR Code ကို Scan ဖတ်၍ သို့မဟုတ် ဓါတ်ပုံရိုက်ကာ Upload
+                                    လုပ်ပြီး အော်ဒါအခြေအနေကို စစ်ဆေးနိုင်ပါသည်။</p>
                             </div>
-                            <p class="text-[10px] text-gray-500 mt-2">ဤ QR Code ကို Scan ဖတ်၍ သို့မဟုတ် ဓါတ်ပုံရိုက်ကာ Upload လုပ်ပြီး အော်ဒါအခြေအနေကို စစ်ဆေးနိုင်ပါသည်။</p>
-                        </div>
                         @endif
 
                         <div class="mt-4 text-center">
