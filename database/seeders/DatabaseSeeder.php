@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\User::create([
             'name' => 'Admin',
             'email' => 'digitalmart.mag@gmail.com',
-            'password' => Hash::make('123456'),
+            'password' => Hash::make('12345678'),
             'role' => 'super_admin',
             'subscription_start' => now(),
             'subscription_end' => now()->addYears(10),
