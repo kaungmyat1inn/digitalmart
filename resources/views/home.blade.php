@@ -168,6 +168,7 @@
             @endif
 
             <!-- Products Grid -->
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
                 @foreach ($products as $product)
                     <div class="group bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden transform hover:-translate-y-2 {{ $product->stock > 0 ? 'cursor-pointer' : 'cursor-not-allowed opacity-75' }}"
                         onclick="{{ $product->stock > 0 ? 'openProductModal(this)' : '' }}" data-id="{{ $product->id }}"
@@ -459,7 +460,7 @@
                     btn.onclick = function () {
                         // Save the selected variant ID before opening new modal
                         const targetVariantId = variant.id;
-                        
+
                         // Remove selected state from all buttons
                         document.querySelectorAll('#modalVariants button').forEach(b => {
                             b.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
@@ -475,7 +476,7 @@
                             // Store variant to select after modal opens
                             window.variantToSelect = targetVariantId;
                             openProductModal(el);
-                            
+
                             // After modal opens, find and select the corresponding variant button
                             setTimeout(() => {
                                 const newVariantsDiv = document.getElementById('modalVariants');
