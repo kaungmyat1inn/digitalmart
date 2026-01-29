@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Category;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
 class AdminController extends Controller
@@ -367,4 +368,3 @@ class AdminController extends Controller
         ]);
     }
 }
-
