@@ -165,3 +165,9 @@ lib/
 -   Guest endpoints use session cookies for cart
 -   All responses are in JSON format
 -   Error responses include `message` and `errors` fields
+
+### Images in Flutter
+
+-   Product and cart responses include **`image_url`** (full URL) and `image` (path).
+-   Use **`image_url`** for `Image.network()` in Flutter so images load correctly (e.g. `Image.network(product['image_url'] ?? '')`).
+-   Handle null: some products may have no image (`image_url` will be `null`).

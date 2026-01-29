@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use App\Models\Product;
 
 class CartController extends Controller
@@ -35,6 +36,7 @@ class CartController extends Controller
                     'price' => $product->price,
                     'quantity' => $item['quantity'],
                     'image' => $product->image,
+                    'image_url' => $product->image_url,
                     'category' => $product->category->name ?? null,
                     'subtotal' => $itemTotal,
                     'stock' => $product->stock,
