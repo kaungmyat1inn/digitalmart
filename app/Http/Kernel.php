@@ -36,6 +36,7 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
+            \App\Http\Middleware\AddCorsHeaders::class,
         ],
 
         'api' => [
@@ -66,5 +67,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'spam.protect' => \App\Http\Middleware\SpamProtection::class,
         'admin.super_admin' => \App\Http\Middleware\SuperAdminMiddleware::class,
+        'cors.headers' => \App\Http\Middleware\AddCorsHeaders::class,
     ];
 }
