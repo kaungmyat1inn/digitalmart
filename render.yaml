@@ -9,5 +9,5 @@ services:
         value: 8.2
       - key: APP_DEBUG
         value: true
-      - key: base64:bbTzPQhjdAeeJgIS8sYCUGbSHwtC9CzZU4PR0/zN6Vk=
+      - key: APP_KEY
         sync: false
