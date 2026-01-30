@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: digitalmart
+    env: php
+    buildCommand: composer install --no-dev --optimize-autoloader
+    startCommand: php artisan migrate --force && php artisan serve --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PHP_VERSION
+        value: 8.2
+      - key: APP_DEBUG
+        value: true
+      - key: base64:bbTzPQhjdAeeJgIS8sYCUGbSHwtC9CzZU4PR0/zN6Vk=
+        sync: false
