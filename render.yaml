@@ -1,27 +1,12 @@
 services:
   - type: web
     name: digitalmart
-    env: php
-    buildCommand: composer install --no-dev --optimize-autoloader
-    startCommand: php artisan migrate --force && php artisan serve --host 0.0.0.0 --port $PORT
+    env: docker # <--- ဒီနေရာ ပြောင်းလိုက်တာပါ
+    plan: free
     envVars:
-      - key: PHP_VERSION
-        value: 8.2
-      - key: APP_DEBUG
-        value: true
       - key: APP_KEY
         sync: false
-      - key: APP_URL # ပုံတွေပေါ်ဖို့ လိုပါတယ်
-        sync: false
-      - key: DB_CONNECTION
-        value: mysql
-      - key: DB_HOST # Aiven/Other DB Host
-        sync: false
-      - key: DB_PORT
-        sync: false
-      - key: DB_DATABASE
-        sync: false
-      - key: DB_USERNAME
-        sync: false
-      - key: DB_PASSWORD
+      - key: APP_DEBUG
+        value: true
+      - key: APP_URL
         sync: false
