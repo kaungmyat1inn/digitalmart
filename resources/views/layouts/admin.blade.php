@@ -101,6 +101,15 @@
                         <span class="font-medium">Categories</span>
                     </a>
 
+                    <a href="{{ route('admin.promotions.index') }}"
+                        class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors mb-1 
+                       {{ request()->routeIs('admin.promotions.*') ? 'bg-blue-600 text-white shadow-lg shadow-blue-500/30' : 'text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-blue-600' }}">
+                        <div class="w-5 flex justify-center">
+                            <i class="fas fa-images {{ request()->routeIs('admin.promotions.*') ? 'text-white' : '' }}"></i>
+                        </div>
+                        <span class="font-medium">Promotions</span>
+                    </a>
+
                     {{-- Admin Management (Super Admin Only) --}}
                     @if(Auth::check() && Auth::user()->isSuperAdmin())
                         <a href="{{ route('admin.users.index') }}"

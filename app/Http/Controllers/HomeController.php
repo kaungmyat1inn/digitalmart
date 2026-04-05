@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\Product;
+use App\Models\PromotionSlide;
 
 use Illuminate\Http\Request;
 
@@ -11,6 +13,11 @@ class HomeController extends Controller
     public function index(Request $request)
     {
         $search = $request->get('search', '');
+
+        $slides = PromotionSlide::where('is_active', true)
+            ->orderBy('sort_order')
+            ->orderByDesc('created_at')
+            ->get();
 
         $products = \App\Models\Product::with(['category', 'variants'])
             ->withCount('orderItems')
@@ -26,7 +33,18 @@ class HomeController extends Controller
             ->latest()
             ->paginate(16);
 
-        return view('home', compact('products', 'search'));
+        $featuredProductsCount = Product::count();
+        $inStockProductsCount = Product::where('stock', '>', 0)->count();
+        $totalOrdersCount = Order::count();
+
+        return view('home', compact(
+            'products',
+            'search',
+            'slides',
+            'featuredProductsCount',
+            'inStockProductsCount',
+            'totalOrdersCount'
+        ));
     }
     public function trackOrder(Request $request)
     {

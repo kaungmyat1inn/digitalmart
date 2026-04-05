@@ -1,270 +1,254 @@
 @extends('layouts.master')
 
-@if (session('error'))
-    <div class="bg-red-500 text-white p-4 text-center font-bold sticky top-20 z-50 shadow-lg animate-pulse">
-        {{ session('error') }}
-    </div>
-@endif
-
 @section('content')
-    <!-- Hero Section -->
-    <div class="relative bg-gradient-to-br from-indigo-900 via-blue-800 to-purple-900 text-white overflow-hidden">
-        <!-- Animated Background -->
-        <div class="absolute inset-0 overflow-hidden">
-            <div
-                class="absolute -top-40 -right-40 w-80 h-80 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob">
-            </div>
-            <div
-                class="absolute -bottom-40 -left-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000">
-            </div>
-            <div
-                class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-indigo-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse">
-            </div>
+    @if (session('error'))
+        <div class="bg-red-500 text-white p-4 text-center font-bold sticky top-20 z-50 shadow-lg">
+            {{ session('error') }}
         </div>
+    @endif
 
-        <!-- Floating Particles -->
-        <div class="absolute inset-0" id="particles"></div>
+    @php
+        $heroSlides = $slides->count()
+            ? $slides
+            : collect([
+                (object) [
+                    'title' => 'Fresh tech drops for your digital lifestyle',
+                    'subtitle' => 'DigitalMart Weekly Picks',
+                    'description' => 'Run the shop with a living promotion carousel. Add your own campaign images, flash sales, and launch banners from the admin panel.',
+                    'cta_label' => 'Shop Collection',
+                    'cta_link' => '#products-section',
+                    'image_url' => 'https://placehold.co/1200x720/png?text=DigitalMart+Promotion',
+                ],
+            ]);
+    @endphp
 
-        <div class="container mx-auto px-4 py-20 md:py-32 relative z-10">
-            <div class="flex flex-col lg:flex-row items-center justify-between gap-12">
-                <div class="lg:w-1/2 space-y-8">
-                    <div
-                        class="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full border border-white/20">
-                        <span class="w-2 h-2 bg-green-400 rounded-full animate-pulse"></span>
-                        <span class="text-sm font-medium">New Arrivals 2024</span>
+    <section class="relative overflow-hidden bg-[#f4efe8]">
+        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(180,83,9,0.18),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(14,116,144,0.18),_transparent_36%)]"></div>
+
+        <div class="relative container mx-auto px-4 pt-8 pb-12 md:pt-10 md:pb-16">
+            <div class="grid grid-cols-1 xl:grid-cols-[minmax(0,1.2fr),360px] gap-6 items-stretch">
+                <div class="relative overflow-hidden rounded-[2rem] bg-[#1c1917] text-white shadow-[0_30px_80px_-30px_rgba(28,25,23,0.7)]">
+                    <div class="absolute inset-0 bg-gradient-to-r from-[#111827]/90 via-[#111827]/65 to-[#0f766e]/50"></div>
+                    <div class="absolute inset-0">
+                        @foreach ($heroSlides as $slide)
+                            <article
+                                class="hero-slide absolute inset-0 {{ $loop->first ? 'opacity-100' : 'opacity-0 pointer-events-none' }}"
+                                data-slide-index="{{ $loop->index }}">
+                                <img src="{{ $slide->image_url }}" alt="{{ $slide->title }}"
+                                    class="absolute inset-0 h-full w-full object-cover">
+                                <div class="absolute inset-0 bg-gradient-to-r from-[#111827]/90 via-[#111827]/65 to-transparent"></div>
+                                <div class="relative z-10 flex h-full flex-col justify-between p-6 sm:p-8 lg:p-10">
+                                    <div class="max-w-2xl">
+                                        @if (!empty($slide->subtitle))
+                                            <span
+                                                class="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-amber-200 backdrop-blur">
+                                                <span class="h-2 w-2 rounded-full bg-amber-300"></span>
+                                                {{ $slide->subtitle }}
+                                            </span>
+                                        @endif
+
+                                        <h1 class="mt-6 max-w-2xl text-4xl font-black leading-tight sm:text-5xl lg:text-6xl">
+                                            {{ $slide->title }}
+                                        </h1>
+                                        @if (!empty($slide->description))
+                                            <p class="mt-5 max-w-xl text-sm leading-7 text-stone-200 sm:text-base">
+                                                {{ $slide->description }}
+                                            </p>
+                                        @endif
+
+                                        <div class="mt-8 flex flex-wrap gap-3">
+                                            <a href="{{ $slide->cta_link ?: '#products-section' }}"
+                                                class="inline-flex items-center gap-2 rounded-full bg-[#f59e0b] px-6 py-3 text-sm font-bold text-stone-950 transition hover:bg-[#fbbf24]">
+                                                {{ $slide->cta_label ?: 'Shop Now' }}
+                                                <i class="fas fa-arrow-right text-xs"></i>
+                                            </a>
+                                            <a href="{{ route('track_order') }}"
+                                                class="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/20">
+                                                Track Order
+                                            </a>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-8 flex flex-wrap gap-3 text-xs text-stone-200 sm:text-sm">
+                                        <div class="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur">
+                                            <div class="text-2xl font-black text-white">{{ $featuredProductsCount }}+</div>
+                                            <div>Curated gadgets</div>
+                                        </div>
+                                        <div class="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur">
+                                            <div class="text-2xl font-black text-white">{{ $inStockProductsCount }}+</div>
+                                            <div>Ready to ship</div>
+                                        </div>
+                                        <div class="rounded-2xl border border-white/10 bg-white/10 px-4 py-3 backdrop-blur">
+                                            <div class="text-2xl font-black text-white">{{ $totalOrdersCount }}+</div>
+                                            <div>Orders fulfilled</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </article>
+                        @endforeach
                     </div>
 
-                    <h1 class="text-4xl md:text-6xl lg:text-7xl font-bold leading-tight">
-                        Upgrade Your <br>
-                        <span
-                            class="text-transparent bg-clip-text bg-gradient-to-r from-blue-300 via-purple-300 to-pink-300">Digital
-                            Life</span>
-                    </h1>
+                    @if ($heroSlides->count() > 1)
+                        <button type="button" id="hero-prev"
+                            class="absolute left-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/20 bg-black/25 px-4 py-3 text-white backdrop-blur transition hover:bg-black/40">
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <button type="button" id="hero-next"
+                            class="absolute right-4 top-1/2 z-20 -translate-y-1/2 rounded-full border border-white/20 bg-black/25 px-4 py-3 text-white backdrop-blur transition hover:bg-black/40">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
 
-                    <p class="text-lg md:text-xl text-blue-100 max-w-xl leading-relaxed">
-                        Discover the latest gadgets, electronics, and accessories at unbeatable prices.
-                        Quality guaranteed with fast delivery nationwide.
+                        <div class="absolute bottom-5 left-6 z-20 flex gap-2">
+                            @foreach ($heroSlides as $slide)
+                                <button type="button"
+                                    class="hero-dot h-2.5 rounded-full bg-white/40 transition-all {{ $loop->first ? 'w-10 bg-white' : 'w-2.5' }}"
+                                    data-target-index="{{ $loop->index }}"
+                                    aria-label="Go to slide {{ $loop->iteration }}"></button>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+
+                <div class="grid gap-6">
+                    <div class="rounded-[2rem] bg-white p-6 shadow-[0_20px_50px_-30px_rgba(15,23,42,0.45)] ring-1 ring-black/5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="text-xs font-bold uppercase tracking-[0.25em] text-cyan-700">Store Highlights</p>
+                                <h2 class="mt-2 text-2xl font-black text-stone-900">Fast-moving deals</h2>
+                            </div>
+                            <div class="rounded-2xl bg-cyan-50 p-4 text-cyan-700">
+                                <i class="fas fa-bolt text-xl"></i>
+                            </div>
+                        </div>
+                        <div class="mt-6 space-y-4">
+                            <div class="rounded-2xl bg-stone-50 p-4">
+                                <div class="flex items-center justify-between">
+                                    <span class="text-sm font-semibold text-stone-600">In-stock picks</span>
+                                    <span class="text-lg font-black text-stone-900">{{ $inStockProductsCount }}</span>
+                                </div>
+                                <div class="mt-3 h-2 rounded-full bg-stone-200">
+                                    <div class="h-2 rounded-full bg-gradient-to-r from-cyan-600 to-emerald-500" style="width: {{ min(100, max(18, $featuredProductsCount > 0 ? ($inStockProductsCount / max($featuredProductsCount, 1)) * 100 : 18)) }}%"></div>
+                                </div>
+                            </div>
+                            <div class="rounded-2xl bg-stone-900 p-5 text-white">
+                                <p class="text-sm text-stone-300">Need help before ordering?</p>
+                                <p class="mt-2 text-xl font-black">Track shipments and manage checkout in seconds.</p>
+                                <a href="{{ route('track_order') }}" class="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-amber-300">
+                                    Open tracking
+                                    <i class="fas fa-arrow-right text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="rounded-[2rem] bg-[#0f766e] p-6 text-white shadow-[0_20px_50px_-30px_rgba(15,118,110,0.65)]">
+                        <p class="text-xs font-bold uppercase tracking-[0.25em] text-teal-100">Admin Controlled</p>
+                        <h3 class="mt-3 text-2xl font-black">Promotion photos can now be updated from the dashboard.</h3>
+                        <p class="mt-3 text-sm leading-7 text-teal-50">Upload images, change headlines, hide old campaigns, and reorder slides from the new Promotions section.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="products-section" class="bg-[#fffaf5] py-14 sm:py-16">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+                <div>
+                    <p class="text-xs font-bold uppercase tracking-[0.3em] text-amber-700">
+                        {{ $search ? 'Search Results' : 'Shop Floor' }}
                     </p>
-
-                    <div class="flex flex-wrap gap-4">
-                        <button onclick="scrollToProducts()"
-                            class="group bg-white text-indigo-900 hover:bg-blue-50 font-bold py-4 px-8 rounded-full shadow-xl transition-all duration-300 transform hover:scale-105 hover:shadow-2xl flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none"
-                                viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                            Shop Now
-                        </button>
-                        <button onclick="window.location.href='{{ route('track_order') }}'"
-                            class="group bg-transparent border-2 border-white/30 hover:border-white text-white font-bold py-4 px-8 rounded-full transition-all duration-300 hover:bg-white/10 flex items-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                            </svg>
-                            Track Order
-                        </button>
-                    </div>
-
-                    <!-- Stats -->
-                    <div class="flex gap-8 pt-4">
-                        <div>
-                            <div class="text-3xl font-bold">500+</div>
-                            <div class="text-blue-200 text-sm">Products</div>
-                        </div>
-                        <div>
-                            <div class="text-3xl font-bold">10K+</div>
-                            <div class="text-blue-200 text-sm">Customers</div>
-                        </div>
-                        <div>
-                            <div class="text-3xl font-bold">4.9★</div>
-                            <div class="text-blue-200 text-sm">Rating</div>
-                        </div>
-                    </div>
+                    <h2 class="mt-3 text-3xl font-black text-stone-900 sm:text-4xl">
+                        {{ $search ? 'Products matching "' . $search . '"' : 'Popular products worth opening first' }}
+                    </h2>
+                    <p class="mt-3 max-w-2xl text-sm leading-7 text-stone-600 sm:text-base">
+                        {{ $search ? $products->total() . ' results found for your search.' : 'A cleaner storefront with quicker scanning, better product focus, and stronger promotional storytelling at the top of the page.' }}
+                    </p>
                 </div>
 
-                <div class="lg:w-1/2 relative">
-                    <div class="relative w-full max-w-lg mx-auto">
-                        <!-- Main Image -->
-                        <div
-                            class="relative bg-white/10 backdrop-blur-lg rounded-3xl p-8 shadow-2xl transform hover:rotate-1 transition duration-500">
-                            <img src="https://placehold.co/600x400/png?text=Premium+Gadgets" alt="Hero Image"
-                                class="w-full rounded-xl shadow-lg">
-
-                            <!-- Floating Badges -->
-                            <div
-                                class="absolute -top-4 -right-4 bg-gradient-to-r from-pink-500 to-purple-500 text-white px-4 py-2 rounded-full text-sm font-bold shadow-lg animate-bounce">
-                                🔥 Hot Deal
-                            </div>
-                            <div
-                                class="absolute -bottom-4 -left-4 bg-white text-indigo-900 px-4 py-2 rounded-full text-sm font-bold shadow-lg">
-                                🆓 Free Shipping
-                            </div>
-                        </div>
-
-                        <!-- Decorative Elements -->
-                        <div
-                            class="absolute -z-10 top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-blue-500 to-purple-500 rounded-full filter blur-3xl opacity-20">
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Wave Divider -->
-        <div class="absolute bottom-0 left-0 right-0">
-            <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path
-                    d="M0 120L60 110C120 100 240 80 360 70C480 60 600 60 720 65C840 70 960 80 1080 85C1200 90 1320 90 1380 90L1440 90V120H1380C1320 120 1200 120 1080 120C960 120 840 120 720 120C600 120 480 120 360 120C240 120 120 120 60 120H0Z"
-                    fill="#f9fafb" />
-            </svg>
-        </div>
-    </div>
-
-    <!-- Main Content -->
-    <div class="bg-gray-50 min-h-screen" id="products-section">
-        <div class="container mx-auto px-4 py-16">
-
-            @if($search)
-                <!-- Search Results -->
-                <div class="flex items-center justify-between mb-8 flex-wrap gap-4">
-                    <div>
-                        <h2 class="text-3xl font-bold text-gray-800">Search Results for "{{ $search }}"</h2>
-                        <p class="text-gray-500 mt-1">{{ $products->total() }} products found</p>
-                    </div>
-                    <a href="{{ route('home') }}"
-                        class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium px-4 py-2 rounded-lg hover:bg-blue-50 transition">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                        Clear Search
+                <div class="flex flex-wrap gap-3">
+                    @if ($search)
+                        <a href="{{ route('home') }}"
+                            class="inline-flex items-center gap-2 rounded-full border border-stone-300 px-5 py-3 text-sm font-semibold text-stone-700 transition hover:border-stone-900 hover:text-stone-900">
+                            Clear Search
+                        </a>
+                    @endif
+                    <a href="{{ route('cart.index') }}"
+                        class="inline-flex items-center gap-2 rounded-full bg-stone-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-stone-700">
+                        View Cart
+                        <i class="fas fa-arrow-right text-xs"></i>
                     </a>
                 </div>
-            @else
-                <!-- Section Header -->
-                <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
-                    <div>
-                        <h2 class="text-3xl font-bold text-gray-800 flex items-center gap-3">
-                            <span class="w-1 h-8 bg-gradient-to-b from-blue-500 to-purple-500 rounded-full"></span>
-                            Popular Products
-                        </h2>
-                        <p class="text-gray-500 mt-1">Handpicked just for you</p>
-                    </div>
-                    <div class="flex items-center gap-3">
-                        <a href="#"
-                            class="text-blue-600 hover:text-blue-700 font-medium flex items-center gap-1 px-4 py-2 rounded-lg hover:bg-blue-50 transition">
-                            View All
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none" viewBox="0 0 24 24"
-                                stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                            </svg>
-                        </a>
-                    </div>
-                </div>
-            @endif
+            </div>
 
-            <!-- Products Grid -->
-            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
+            <div class="mt-10 grid grid-cols-2 gap-4 md:grid-cols-3 xl:grid-cols-5">
                 @foreach ($products as $product)
-                    <div class="group bg-white rounded-2xl shadow-sm hover:shadow-2xl transition-all duration-500 border border-gray-100 overflow-hidden transform hover:-translate-y-2 {{ $product->stock > 0 ? 'cursor-pointer' : 'cursor-not-allowed opacity-75' }}"
+                    <article
+                        class="group overflow-hidden rounded-[1.75rem] border border-stone-200 bg-white shadow-[0_18px_45px_-28px_rgba(15,23,42,0.38)] transition duration-500 hover:-translate-y-2 hover:shadow-[0_28px_70px_-30px_rgba(15,23,42,0.45)] {{ $product->stock > 0 ? 'cursor-pointer' : 'opacity-80' }}"
                         onclick="{{ $product->stock > 0 ? 'openProductModal(this)' : '' }}" data-id="{{ $product->id }}"
                         data-name="{{ $product->name }}" data-price="{{ number_format($product->price) }}"
                         data-image="{{ asset('storage/' . $product->image) }}" data-category="{{ $product->category->name }}"
                         data-code="{{ $product->code_number }}" data-add-cart-url="{{ route('add_to_cart', $product->id) }}"
                         data-description="{{ $product->description }}" data-stock="{{ $product->stock }}">
-
-                        <!-- Image Container -->
-                        <div class="relative overflow-hidden aspect-square bg-gradient-to-br from-gray-100 to-gray-200">
-                            <!-- Category Badge -->
-                            <span
-                                class="absolute top-3 left-3 z-10 bg-white/90 backdrop-blur-sm text-xs font-bold px-3 py-1.5 rounded-full text-gray-700 shadow-md border border-gray-200">
-                                {{ $product->category->name }}
-                            </span>
-
-                            <!-- Stock Badge -->
-                            @if($product->stock <= 0)
-                                <span
-                                    class="absolute top-3 right-3 z-10 bg-red-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md">
-                                    Out of Stock
-                                </span>
-                                <div class="absolute inset-0 bg-gray-900/50 z-0"></div>
-                            @elseif($product->stock <= 5)
-                                <span
-                                    class="absolute top-3 right-3 z-10 bg-orange-500 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-md animate-pulse">
-                                    Only {{ $product->stock }} left
-                                </span>
-                            @endif
-
-                            <!-- Product Image -->
+                        <div class="relative aspect-[4/4.3] overflow-hidden bg-[#f5f5f4]">
                             <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
-                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110">
-
-                            <!-- Quick Action Button -->
-                            @if($product->stock > 0)
-                                <div
-                                    class="absolute bottom-3 right-3 transform translate-y-20 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
-                                    <button onclick="event.stopPropagation(); quickView({{ $product->id }})"
-                                        class="bg-white text-gray-800 p-3 rounded-full shadow-lg hover:bg-blue-600 hover:text-white transition-all duration-300 transform hover:scale-110">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                                            stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                                        </svg>
-                                    </button>
-                                </div>
-                            @endif
-                        </div>
-
-                        <!-- Product Info -->
-                        <div class="p-4 space-y-3">
-                            <h3
-                                class="font-bold text-gray-800 leading-snug group-hover:text-blue-600 transition-colors duration-300 line-clamp-2">
-                                {{ $product->name }}
-                            </h3>
-
-                            <div class="flex items-center gap-2 text-xs text-gray-400">
-                                <span class="font-mono bg-gray-100 px-2 py-1 rounded">{{ $product->code_number }}</span>
-                            </div>
-
-                            <div class="flex items-center justify-between pt-2">
-                                @if($product->stock > 0)
-                                    <div class="flex items-baseline gap-1">
-                                        <span class="text-xl font-bold text-blue-600">{{ number_format($product->price) }}</span>
-                                        <span class="text-sm text-gray-500">ကျပ်</span>
-                                    </div>
-                                @else
-                                    <span class="text-red-500 font-bold">Out of Stock</span>
+                                class="h-full w-full object-cover transition duration-700 group-hover:scale-110">
+                            <div class="absolute inset-x-0 top-0 flex items-start justify-between p-3">
+                                <span class="rounded-full bg-white/90 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.2em] text-stone-700 backdrop-blur">
+                                    {{ $product->category->name }}
+                                </span>
+                                @if ($product->stock <= 0)
+                                    <span class="rounded-full bg-red-500 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.15em] text-white">
+                                        Out
+                                    </span>
+                                @elseif ($product->stock <= 5)
+                                    <span class="rounded-full bg-amber-400 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.15em] text-stone-900">
+                                        {{ $product->stock }} left
+                                    </span>
                                 @endif
                             </div>
                         </div>
-                    </div>
+
+                        <div class="space-y-4 p-4 sm:p-5">
+                            <div>
+                                <p class="text-[11px] font-bold uppercase tracking-[0.25em] text-stone-400">{{ $product->code_number }}</p>
+                                <h3 class="mt-2 line-clamp-2 text-sm font-bold leading-6 text-stone-900 sm:text-base">
+                                    {{ $product->name }}
+                                </h3>
+                            </div>
+
+                            <div class="flex items-end justify-between gap-3">
+                                @if ($product->stock > 0)
+                                    <div>
+                                        <div class="text-xl font-black text-stone-900">{{ number_format($product->price) }}</div>
+                                        <div class="text-xs font-medium uppercase tracking-[0.2em] text-stone-400">MMK</div>
+                                    </div>
+                                    <button type="button" onclick="event.stopPropagation(); quickView({{ $product->id }})"
+                                        class="inline-flex h-11 w-11 items-center justify-center rounded-full bg-[#0f766e] text-white transition hover:bg-[#115e59]">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                @else
+                                    <div class="text-sm font-bold text-red-500">Out of stock</div>
+                                @endif
+                            </div>
+                        </div>
+                    </article>
                 @endforeach
             </div>
 
-            <!-- Pagination -->
             <div class="mt-12">
                 {{ $products->links() }}
             </div>
         </div>
-    </div>
+    </section>
 
-    <!-- Product Details Modal -->
     <div id="productModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <!-- Backdrop with blur -->
         <div class="fixed inset-0 bg-gray-900/60 backdrop-blur-sm transition-opacity" onclick="closeProductModal()"></div>
 
-        <!-- Modal Container -->
         <div class="fixed inset-0 z-10 overflow-y-auto">
             <div class="flex min-h-full items-center justify-center p-4">
                 <div class="relative w-full max-w-4xl bg-white rounded-3xl shadow-2xl transform transition-all duration-500 scale-95 opacity-0"
                     id="modalPanel">
-                    <!-- Close Button -->
                     <button type="button" onclick="closeProductModal()"
                         class="absolute top-4 right-4 z-20 bg-white/80 hover:bg-white text-gray-500 hover:text-gray-700 rounded-full p-2 shadow-lg transition-all duration-300 hover:scale-110">
                         <svg class="w-6 h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
@@ -275,35 +259,24 @@
                     </button>
 
                     <div class="grid grid-cols-1 md:grid-cols-2">
-                        <!-- Product Image -->
-                        <div
-                            class="relative bg-gradient-to-br from-gray-100 to-gray-200 p-8 md:min-h-[500px] flex items-center justify-center">
+                        <div class="relative bg-gradient-to-br from-gray-100 to-gray-200 p-8 md:min-h-[500px] flex items-center justify-center">
                             <img id="modalImage" src="" alt="Product Image"
                                 class="max-w-full max-h-[400px] object-contain rounded-2xl shadow-lg transform transition-transform duration-500 hover:scale-105">
-
-                            <!-- Stock Badge -->
                             <span id="modalStockBadge"
                                 class="absolute top-4 left-4 px-3 py-1 rounded-full text-sm font-bold hidden"></span>
                         </div>
 
-                        <!-- Product Details -->
                         <div class="p-8 flex flex-col">
                             <div class="mb-auto space-y-4">
-                                <!-- Category -->
                                 <span id="modalCategory"
-                                    class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-blue-100 text-blue-700">
-                                </span>
+                                    class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold tracking-wider uppercase bg-blue-100 text-blue-700"></span>
 
-                                <!-- Title -->
-                                <h2 id="modalTitle" class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
-                                </h2>
+                                <h2 id="modalTitle" class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight"></h2>
 
-                                <!-- Code -->
                                 <p class="text-sm text-gray-500 font-mono bg-gray-100 inline-block px-3 py-1 rounded-lg">
                                     Code: <span id="modalCode"></span>
                                 </p>
 
-                                <!-- Price -->
                                 <div class="py-4 border-y border-gray-100">
                                     <div class="flex items-baseline gap-2">
                                         <span id="modalPrice" class="text-3xl font-bold text-blue-600"></span>
@@ -311,42 +284,20 @@
                                     </div>
                                 </div>
 
-                                <!-- Description -->
                                 <div>
-                                    <h3 class="font-bold text-gray-900 mb-2 flex items-center gap-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                                        </svg>
-                                        Description
-                                    </h3>
+                                    <h3 class="font-bold text-gray-900 mb-2">Description</h3>
                                     <p id="modalDescription" class="text-gray-600 leading-relaxed"></p>
                                 </div>
 
-                                <!-- Variants -->
                                 <div>
-                                    <h3 class="font-bold text-gray-900 mb-3 flex items-center gap-2">
-                                        <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-blue-500" fill="none"
-                                            viewBox="0 0 24 24" stroke="currentColor">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-                                        </svg>
-                                        Available Variants
-                                    </h3>
+                                    <h3 class="font-bold text-gray-900 mb-3">Available Variants</h3>
                                     <div id="modalVariants" class="flex flex-wrap gap-2"></div>
                                 </div>
                             </div>
 
-                            <!-- Action Buttons -->
                             <div class="flex items-center gap-4 pt-6 mt-6 border-t border-gray-100">
                                 <a id="modalAddToCart" href="#"
                                     class="flex-1 inline-flex items-center justify-center gap-2 px-6 py-3 text-sm font-bold text-white bg-gradient-to-r from-blue-500 to-blue-600 rounded-full shadow-lg hover:from-blue-600 hover:to-blue-700 hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24"
-                                        stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                                    </svg>
                                     Add to Cart
                                 </a>
                                 <button onclick="addToWishlist()"
@@ -366,50 +317,11 @@
     </div>
 
     <script>
-        // Get products data from the current page for modal
         const getCurrentProducts = () => @json($products->items());
 
-        // Toast notification
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            const toastMessage = document.getElementById('toastMessage');
-            const toastBg = toast.querySelector('div');
-
-            toastMessage.textContent = message;
-            toastBg.className = `text-white px-6 py-3 rounded-lg shadow-lg flex items-center gap-3 ${type === 'success' ? 'bg-green-500' : 'bg-red-500'}`;
-
-            toast.classList.remove('hidden', 'translate-y-full', 'opacity-0');
-
-            setTimeout(() => {
-                toast.classList.add('translate-y-full', 'opacity-0');
-                setTimeout(() => toast.classList.add('hidden'), 500);
-            }, 3000);
-        }
-
-        // Update cart count in header
-        function updateCartCount() {
-            // Select the cart count span element (inside the cart link)
-            const cartCountElements = document.querySelectorAll('nav .flex.items-center.gap-6 a[href*="cart"] span[class*="bg-red"]');
-            fetch('/cart/count')
-                .then(response => response.json())
-                .then(data => {
-                    cartCountElements.forEach(el => {
-                        el.textContent = data.count || '0';
-                        el.style.display = data.count > 0 ? 'flex' : 'none';
-                    });
-                })
-                .catch(() => { });
-        }
-
-        // Quick view function
         function quickView(productId) {
             const product = document.querySelector(`[data-id="${productId}"]`);
             if (product) openProductModal(product);
-        }
-
-        // Scroll to products
-        function scrollToProducts() {
-            document.getElementById('products-section').scrollIntoView({ behavior: 'smooth' });
         }
 
         function openProductModal(element) {
@@ -417,7 +329,6 @@
             const modalPanel = document.getElementById('modalPanel');
             const data = element.dataset;
 
-            // Populate Modal Data
             document.getElementById('modalImage').src = data.image;
             document.getElementById('modalCategory').textContent = data.category;
             document.getElementById('modalTitle').textContent = data.name;
@@ -426,7 +337,6 @@
             document.getElementById('modalAddToCart').href = data.addCartUrl;
             document.getElementById('modalDescription').textContent = data.description || 'No description available.';
 
-            // Stock badge
             const stockBadge = document.getElementById('modalStockBadge');
             if (parseInt(data.stock) <= 0) {
                 stockBadge.textContent = 'Out of Stock';
@@ -440,7 +350,6 @@
                 stockBadge.classList.add('hidden');
             }
 
-            // Variants
             let variants = [];
             const currentId = parseInt(data.id);
             const currentProducts = getCurrentProducts();
@@ -458,45 +367,9 @@
                     btn.className = 'px-4 py-2 rounded-xl border-2 border-gray-200 bg-white text-gray-700 text-sm font-semibold hover:border-blue-500 hover:bg-blue-50 hover:text-blue-600 transition-all duration-300 cursor-pointer';
                     btn.textContent = `${variant.name} (${variant.code_number})`;
                     btn.onclick = function () {
-                        // Save the selected variant ID before opening new modal
-                        const targetVariantId = variant.id;
-
-                        // Remove selected state from all buttons
-                        document.querySelectorAll('#modalVariants button').forEach(b => {
-                            b.classList.remove('bg-blue-600', 'text-white', 'border-blue-600');
-                            b.classList.add('bg-white', 'text-gray-700', 'border-gray-200');
-                        });
-                        // Add selected state to clicked button
-                        btn.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
-                        btn.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
-
-                        // Open variant product
                         const el = document.querySelector(`[data-id="${variant.id}"]`);
                         if (el) {
-                            // Store variant to select after modal opens
-                            window.variantToSelect = targetVariantId;
                             openProductModal(el);
-
-                            // After modal opens, find and select the corresponding variant button
-                            setTimeout(() => {
-                                const newVariantsDiv = document.getElementById('modalVariants');
-                                if (newVariantsDiv && window.variantToSelect) {
-                                    const newButtons = newVariantsDiv.querySelectorAll('button');
-                                    // Find button with matching variant data (using data attributes or text)
-                                    newButtons.forEach((b, index) => {
-                                        const currentProducts = getCurrentProducts();
-                                        const modalProduct = currentProducts.find(p => p.id == parseInt(el.dataset.id));
-                                        if (modalProduct && modalProduct.variants && modalProduct.variants[index]) {
-                                            const v = modalProduct.variants[index];
-                                            if (v.id == window.variantToSelect) {
-                                                b.classList.remove('bg-white', 'text-gray-700', 'border-gray-200');
-                                                b.classList.add('bg-blue-600', 'text-white', 'border-blue-600');
-                                            }
-                                        }
-                                    });
-                                }
-                                window.variantToSelect = null;
-                            }, 50);
                         }
                     };
                     variantsDiv.appendChild(btn);
@@ -505,11 +378,9 @@
                 variantsDiv.innerHTML = '<span class="text-sm text-gray-400 italic">No other variants available</span>';
             }
 
-            // Show Modal with animation
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden';
 
-            // Animate modal panel
             setTimeout(() => {
                 modalPanel.classList.remove('scale-95', 'opacity-0');
                 modalPanel.classList.add('scale-100', 'opacity-100');
@@ -520,7 +391,6 @@
             const modal = document.getElementById('productModal');
             const modalPanel = document.getElementById('modalPanel');
 
-            // Animate out
             modalPanel.classList.remove('scale-100', 'opacity-100');
             modalPanel.classList.add('scale-95', 'opacity-0');
 
@@ -530,107 +400,77 @@
             }, 300);
         }
 
-        // Close on Escape key
-        document.addEventListener('keydown', function (event) {
-            if (event.key === "Escape") {
+        function addToWishlist() {
+            return;
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
                 closeProductModal();
             }
         });
 
-        // Create floating particles
-        function createParticles() {
-            const container = document.getElementById('particles');
-            for (let i = 0; i < 20; i++) {
-                const particle = document.createElement('div');
-                particle.className = 'absolute w-2 h-2 bg-white/10 rounded-full';
-                particle.style.left = Math.random() * 100 + '%';
-                particle.style.top = Math.random() * 100 + '%';
-                particle.style.animation = `float ${3 + Math.random() * 4}s ease-in-out infinite`;
-                particle.style.animationDelay = Math.random() * 2 + 's';
-                container.appendChild(particle);
-            }
-        }
-
-        // Initialize
         document.addEventListener('DOMContentLoaded', function () {
-            createParticles();
-            updateCartCount();
+            const slides = Array.from(document.querySelectorAll('.hero-slide'));
+            const dots = Array.from(document.querySelectorAll('.hero-dot'));
+            const prevButton = document.getElementById('hero-prev');
+            const nextButton = document.getElementById('hero-next');
+
+            if (!slides.length) {
+                return;
+            }
+
+            let activeIndex = 0;
+            let intervalId = null;
+
+            const renderSlide = (nextIndex) => {
+                slides.forEach((slide, index) => {
+                    const isActive = index === nextIndex;
+                    slide.classList.toggle('opacity-100', isActive);
+                    slide.classList.toggle('opacity-0', !isActive);
+                    slide.classList.toggle('pointer-events-none', !isActive);
+                });
+
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('w-10', index === nextIndex);
+                    dot.classList.toggle('bg-white', index === nextIndex);
+                    dot.classList.toggle('w-2.5', index !== nextIndex);
+                    dot.classList.toggle('bg-white/40', index !== nextIndex);
+                });
+
+                activeIndex = nextIndex;
+            };
+
+            const nextSlide = () => renderSlide((activeIndex + 1) % slides.length);
+            const prevSlide = () => renderSlide((activeIndex - 1 + slides.length) % slides.length);
+
+            const startAutoplay = () => {
+                if (slides.length <= 1) {
+                    return;
+                }
+
+                clearInterval(intervalId);
+                intervalId = setInterval(nextSlide, 5000);
+            };
+
+            prevButton?.addEventListener('click', () => {
+                prevSlide();
+                startAutoplay();
+            });
+
+            nextButton?.addEventListener('click', () => {
+                nextSlide();
+                startAutoplay();
+            });
+
+            dots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    renderSlide(index);
+                    startAutoplay();
+                });
+            });
+
+            startAutoplay();
         });
     </script>
-
-    <style>
-        /* Custom Animations */
-        @keyframes blob {
-
-            0%,
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
-
-            25% {
-                transform: translate(20px, -20px) scale(1.1);
-            }
-
-            50% {
-                transform: translate(-20px, 20px) scale(0.9);
-            }
-
-            75% {
-                transform: translate(20px, 20px) scale(1.05);
-            }
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0) scale(1);
-                opacity: 0.3;
-            }
-
-            50% {
-                transform: translateY(-30px) scale(1.2);
-                opacity: 0.6;
-            }
-        }
-
-        .animate-blob {
-            animation: blob 7s infinite;
-        }
-
-        .animation-delay-2000 {
-            animation-delay: 2s;
-        }
-
-        /* Line clamp for product names */
-        .line-clamp-2 {
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        /* Smooth scroll */
-        html {
-            scroll-behavior: smooth;
-        }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, #3b82f6, #8b5cf6);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(to bottom, #2563eb, #7c3aed);
-        }
-    </style>
 @endsection

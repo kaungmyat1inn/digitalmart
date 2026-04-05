@@ -6,6 +6,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\PromotionSlideController;
 
 // ============ PUBLIC ROUTES ============
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -79,6 +80,12 @@ Route::middleware('auth')->group(function () {
         Route::get('/admin/categories', [AdminController::class, 'indexCategories'])->name('admin.categories.index');
         Route::post('/admin/categories', [AdminController::class, 'storeCategory'])->name('admin.categories.store');
         Route::delete('/admin/categories/{id}', [AdminController::class, 'destroyCategory'])->name('admin.categories.destroy');
+
+        // Promotion Slides
+        Route::get('/admin/promotions', [PromotionSlideController::class, 'index'])->name('admin.promotions.index');
+        Route::post('/admin/promotions', [PromotionSlideController::class, 'store'])->name('admin.promotions.store');
+        Route::put('/admin/promotions/{promotion}', [PromotionSlideController::class, 'update'])->name('admin.promotions.update');
+        Route::delete('/admin/promotions/{promotion}', [PromotionSlideController::class, 'destroy'])->name('admin.promotions.destroy');
 
         // Admin Management Routes (Only for Super Admin)
         Route::middleware('admin.super_admin')->group(function () {
