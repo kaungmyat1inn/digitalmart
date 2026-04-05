@@ -200,7 +200,7 @@
         </form>
     </div>
 
-    {{-- Script for Upload Progress & Blur Effect --}}
+    {{-- Script for Image Preview --}}
     <script>
         // 1. Image Preview Logic
         document.getElementById('image-input').addEventListener('change', function (event) {
@@ -214,86 +214,17 @@
             }
         });
 
-        // 2. AJAX Upload Logic with Progress
-        document.getElementById('product-form').addEventListener('submit', function (e) {
-            e.preventDefault(); // Stop normal submission
-
-            const form = this;
-            const formData = new FormData(form);
+        // 2. Standard Form Submit
+        document.getElementById('product-form').addEventListener('submit', function () {
             const overlay = document.getElementById('upload-overlay');
-            const percentText = document.getElementById('upload-percent');
             const imagePreview = document.getElementById('image-preview');
             const submitBtn = document.getElementById('submit-btn');
 
-            // UI Changes: Show Overlay, Blur Image, Disable Button
             overlay.classList.remove('hidden');
             overlay.classList.add('flex');
-            imagePreview.classList.add('blur-sm'); // Add Blur
+            imagePreview.classList.add('blur-sm');
             submitBtn.disabled = true;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i> Processing...';
-
-            // AJAX Request
-            const xhr = new XMLHttpRequest();
-            xhr.open('POST', form.action, true);
-            xhr.setRequestHeader('Accept', 'application/json');
-            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
-            xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
-
-            // Progress Event
-            xhr.upload.onprogress = function (e) {
-                if (e.lengthComputable) {
-                    const percentComplete = Math.round((e.loaded / e.total) * 100);
-                    percentText.textContent = percentComplete + '%';
-
-                    // Optional: Make blur less intense as progress increases
-                    // imagePreview.style.filter = `blur(${5 - (percentComplete / 20)}px)`; 
-                }
-            };
-
-            // Completion Event
-            xhr.onload = function () {
-                if (xhr.status >= 200 && xhr.status < 400) {
-                    // Success!
-                    percentText.textContent = '100%';
-
-                    // Remove Blur Effect (Clear Image)
-                    imagePreview.classList.remove('blur-sm');
-
-                    // Show Success Checkmark briefly then redirect
-                    overlay.innerHTML = '<i class="fas fa-check-circle text-5xl text-green-500 animate-bounce"></i><p class="text-white font-bold mt-2">Saved!</p>';
-
-                    setTimeout(() => {
-                        window.location.href = "{{ route('admin.products.index', absolute: false) }}";
-                    }, 1000);
-
-                } else {
-                    // Error Handling
-                    let message = 'Something went wrong! Please check your inputs.';
-                    try {
-                        const response = JSON.parse(xhr.responseText);
-                        if (response.message) {
-                            message = response.message;
-                        }
-                    } catch (e) {}
-                    alert(message);
-                    overlay.classList.add('hidden');
-                    overlay.classList.remove('flex');
-                    imagePreview.classList.remove('blur-sm');
-                    submitBtn.disabled = false;
-                    submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i> Update Product';
-                }
-            };
-
-            xhr.onerror = function () {
-                alert('Network Error');
-                overlay.classList.add('hidden');
-                overlay.classList.remove('flex');
-                imagePreview.classList.remove('blur-sm');
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i> Update Product';
-            };
-
-            xhr.send(formData);
         });
 
         // Handle Category Change for Code Generation
