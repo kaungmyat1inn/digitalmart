@@ -193,6 +193,21 @@
                                 Click the image to upload.<br>
                                 Recommended: 600x600px (JPEG, PNG)
                             </p>
+
+                            <div class="border-t border-gray-100 pt-4 dark:border-gray-700">
+                                <div class="mb-3 flex items-center justify-between">
+                                    <div>
+                                        <h4 class="text-sm font-bold text-gray-800 dark:text-white">Additional Images</h4>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">Add more photos for product detail carousel.</p>
+                                    </div>
+                                    <button type="button" id="add-gallery-image"
+                                        class="rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-600 transition hover:bg-blue-100">
+                                        + Add
+                                    </button>
+                                </div>
+
+                                <div id="gallery-inputs" class="space-y-3"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -214,6 +229,18 @@
     </div>
 
     {{-- Script for Immediate Image Preview --}}
+    <template id="gallery-input-template">
+        <div class="gallery-input-item rounded-xl border border-gray-200 p-3 dark:border-gray-700">
+            <div class="flex items-center justify-between gap-3">
+                <input type="file" name="gallery_images[]" accept="image/*"
+                    class="block w-full text-xs text-gray-600 file:mr-3 file:rounded-lg file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-xs file:font-semibold hover:file:bg-gray-200 dark:text-gray-300 dark:file:bg-gray-700 dark:hover:file:bg-gray-600">
+                <button type="button" class="remove-gallery-input rounded-lg px-2 py-2 text-xs font-bold text-red-500 hover:bg-red-50">
+                    Remove
+                </button>
+            </div>
+        </div>
+    </template>
+
     <script>
         document.getElementById('image-input').addEventListener('change', function (event) {
             const file = event.target.files[0];
@@ -225,6 +252,24 @@
                 reader.readAsDataURL(file);
             }
         });
+
+        const galleryInputs = document.getElementById('gallery-inputs');
+        const galleryTemplate = document.getElementById('gallery-input-template').content;
+        const addGalleryButton = document.getElementById('add-gallery-image');
+
+        const appendGalleryInput = () => {
+            galleryInputs.appendChild(galleryTemplate.cloneNode(true));
+        };
+
+        addGalleryButton.addEventListener('click', appendGalleryInput);
+
+        galleryInputs.addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-gallery-input')) {
+                event.target.closest('.gallery-input-item')?.remove();
+            }
+        });
+
+        appendGalleryInput();
     </script>
 
     {{-- Quick Add Category Modal --}}

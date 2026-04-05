@@ -15,7 +15,7 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::with(['category', 'variants'])
+        $query = Product::with(['category', 'variants', 'images'])
             ->withCount('orderItems')
             ->when($request->search, function ($q, $search) {
                 return $q->where(function ($subQ) use ($search) {
@@ -115,4 +115,3 @@ class ProductController extends Controller
         ]);
     }
 }
-

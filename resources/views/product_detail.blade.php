@@ -1,6 +1,10 @@
 @extends('layouts.master')
 
 @section('content')
+    @php
+        $galleryImages = $product->gallery_images;
+    @endphp
+
     <section class="py-8">
         <div class="container mx-auto px-4">
             <div class="mb-5">
@@ -13,9 +17,41 @@
 
             <div class="overflow-hidden rounded-xl border border-slate-200 bg-white">
                 <div class="grid gap-0 md:grid-cols-2">
-                    <div class="flex items-center justify-center bg-slate-100 p-8">
-                        <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
-                            class="max-h-[420px] max-w-full rounded-lg object-contain">
+                    <div class="bg-slate-100 p-5 sm:p-8">
+                        <div class="relative overflow-hidden rounded-xl bg-white">
+                            @foreach ($galleryImages as $image)
+                                <div class="product-slide {{ $loop->first ? '' : 'hidden' }}" data-slide-index="{{ $loop->index }}">
+                                    <div class="flex min-h-[360px] items-center justify-center p-6">
+                                        <img src="{{ $image['url'] }}" alt="{{ $product->name }}"
+                                            class="max-h-[420px] max-w-full rounded-lg object-contain">
+                                    </div>
+                                </div>
+                            @endforeach
+
+                            @if ($galleryImages->count() > 1)
+                                <button type="button" id="product-prev"
+                                    class="absolute left-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/90 px-3 py-2 text-slate-700 shadow transition hover:bg-white">
+                                    <i class="fa-solid fa-chevron-left"></i>
+                                </button>
+                                <button type="button" id="product-next"
+                                    class="absolute right-3 top-1/2 z-10 -translate-y-1/2 rounded-full bg-white/90 px-3 py-2 text-slate-700 shadow transition hover:bg-white">
+                                    <i class="fa-solid fa-chevron-right"></i>
+                                </button>
+                            @endif
+                        </div>
+
+                        @if ($galleryImages->count() > 1)
+                            <div class="mt-4 grid grid-cols-4 gap-3 sm:grid-cols-5">
+                                @foreach ($galleryImages as $image)
+                                    <button type="button"
+                                        class="product-thumb overflow-hidden rounded-lg border-2 {{ $loop->first ? 'border-orange-500' : 'border-transparent' }}"
+                                        data-target-index="{{ $loop->index }}">
+                                        <img src="{{ $image['url'] }}" alt="{{ $product->name }}"
+                                            class="h-20 w-full object-cover">
+                                    </button>
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
 
                     <div class="p-6 sm:p-8">
@@ -70,4 +106,58 @@
             </div>
         </div>
     </section>
+
+    @if ($galleryImages->count() > 1)
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const slides = Array.from(document.querySelectorAll('.product-slide'));
+                const thumbs = Array.from(document.querySelectorAll('.product-thumb'));
+                const prevButton = document.getElementById('product-prev');
+                const nextButton = document.getElementById('product-next');
+
+                let activeIndex = 0;
+                let intervalId = null;
+
+                const renderSlide = (nextIndex) => {
+                    slides.forEach((slide, index) => {
+                        slide.classList.toggle('hidden', index !== nextIndex);
+                    });
+
+                    thumbs.forEach((thumb, index) => {
+                        thumb.classList.toggle('border-orange-500', index === nextIndex);
+                        thumb.classList.toggle('border-transparent', index !== nextIndex);
+                    });
+
+                    activeIndex = nextIndex;
+                };
+
+                const nextSlide = () => renderSlide((activeIndex + 1) % slides.length);
+                const prevSlide = () => renderSlide((activeIndex - 1 + slides.length) % slides.length);
+
+                const startAutoplay = () => {
+                    clearInterval(intervalId);
+                    intervalId = setInterval(nextSlide, 4000);
+                };
+
+                prevButton?.addEventListener('click', function() {
+                    prevSlide();
+                    startAutoplay();
+                });
+
+                nextButton?.addEventListener('click', function() {
+                    nextSlide();
+                    startAutoplay();
+                });
+
+                thumbs.forEach((thumb, index) => {
+                    thumb.addEventListener('click', function() {
+                        renderSlide(index);
+                        startAutoplay();
+                    });
+                });
+
+                startAutoplay();
+            });
+        </script>
+    @endif
 @endsection

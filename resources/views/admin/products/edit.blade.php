@@ -181,6 +181,37 @@
 
                             <input type="file" name="image" id="image-input" accept="image/*" class="hidden">
                             <p class="text-xs text-center text-gray-500 dark:text-gray-400">Click to upload (JPEG, PNG)</p>
+
+                            <div class="border-t border-gray-100 pt-4 dark:border-gray-700">
+                                <div class="mb-3 flex items-center justify-between">
+                                    <div>
+                                        <h4 class="text-sm font-bold text-gray-800 dark:text-white">Additional Images</h4>
+                                        <p class="text-xs text-gray-500 dark:text-gray-400">Manage extra photos for the detail page carousel.</p>
+                                    </div>
+                                    <button type="button" id="add-gallery-image"
+                                        class="rounded-lg bg-blue-50 px-3 py-2 text-xs font-bold text-blue-600 transition hover:bg-blue-100">
+                                        + Add
+                                    </button>
+                                </div>
+
+                                @if ($product->images->isNotEmpty())
+                                    <div class="mb-4 space-y-3">
+                                        @foreach ($product->images as $galleryImage)
+                                            <label class="flex items-center gap-3 rounded-xl border border-gray-200 p-3 dark:border-gray-700">
+                                                <img src="{{ $galleryImage->image_url }}" alt="Gallery image"
+                                                    class="h-14 w-14 rounded-lg object-cover">
+                                                <div class="flex-1">
+                                                    <p class="text-xs font-semibold text-gray-700 dark:text-gray-200">Existing image</p>
+                                                    <p class="text-[11px] text-gray-500 dark:text-gray-400">Check to remove this photo</p>
+                                                </div>
+                                                <input type="checkbox" name="remove_gallery_images[]" value="{{ $galleryImage->id }}">
+                                            </label>
+                                        @endforeach
+                                    </div>
+                                @endif
+
+                                <div id="gallery-inputs" class="space-y-3"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -201,6 +232,18 @@
     </div>
 
     {{-- Script for Image Preview --}}
+    <template id="gallery-input-template">
+        <div class="gallery-input-item rounded-xl border border-gray-200 p-3 dark:border-gray-700">
+            <div class="flex items-center justify-between gap-3">
+                <input type="file" name="gallery_images[]" accept="image/*"
+                    class="block w-full text-xs text-gray-600 file:mr-3 file:rounded-lg file:border-0 file:bg-gray-100 file:px-3 file:py-2 file:text-xs file:font-semibold hover:file:bg-gray-200 dark:text-gray-300 dark:file:bg-gray-700 dark:hover:file:bg-gray-600">
+                <button type="button" class="remove-gallery-input rounded-lg px-2 py-2 text-xs font-bold text-red-500 hover:bg-red-50">
+                    Remove
+                </button>
+            </div>
+        </div>
+    </template>
+
     <script>
         // 1. Image Preview Logic
         document.getElementById('image-input').addEventListener('change', function (event) {
@@ -230,6 +273,9 @@
         // Handle Category Change for Code Generation
         const categorySelect = document.getElementById('category-select');
         const codeInput = document.getElementById('code_number');
+        const galleryInputs = document.getElementById('gallery-inputs');
+        const galleryTemplate = document.getElementById('gallery-input-template').content;
+        const addGalleryButton = document.getElementById('add-gallery-image');
         let previousValue = categorySelect.value;
 
         function handleCategoryChange(select) {
@@ -270,6 +316,18 @@
                 codeInput.value = "";
             }
         }
+
+        const appendGalleryInput = () => {
+            galleryInputs.appendChild(galleryTemplate.cloneNode(true));
+        };
+
+        addGalleryButton.addEventListener('click', appendGalleryInput);
+
+        galleryInputs.addEventListener('click', function(event) {
+            if (event.target.classList.contains('remove-gallery-input')) {
+                event.target.closest('.gallery-input-item')?.remove();
+            }
+        });
     </script>
 
     {{-- Include Category Modal Code Here as well --}}

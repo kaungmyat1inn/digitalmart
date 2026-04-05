@@ -6,7 +6,6 @@ use App\Models\Order;
 use App\Models\Product;
 use App\Models\HomepageSetting;
 use App\Models\PromotionSlide;
-use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
 
@@ -29,7 +28,7 @@ class HomeController extends Controller
             ]
         );
 
-        $products = \App\Models\Product::with(['category', 'variants'])
+        $products = \App\Models\Product::with(['category', 'variants', 'images'])
             ->withCount('orderItems')
             ->when($search, function ($query, $search) {
                 return $query->where(function ($q) use ($search) {
@@ -68,16 +67,7 @@ class HomeController extends Controller
 
     public function productDetail(Product $product, string $slug = null)
     {
-        $expectedSlug = Str::of($product->name)->replace(' ', '_')->slug('_');
-
-        if ($slug !== $expectedSlug) {
-            return redirect()->route('products.show', [
-                'product' => $product->id,
-                'slug' => $expectedSlug,
-            ]);
-        }
-
-        $product->load(['category', 'variants.category']);
+        $product->load(['category', 'variants.category', 'images']);
 
         return view('product_detail', compact('product'));
     }

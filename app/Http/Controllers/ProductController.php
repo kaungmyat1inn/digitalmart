@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\ProductImage;
 use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
@@ -47,12 +48,14 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'required|exists:categories,id',
             'group_id' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+            'gallery_images' => 'nullable|array',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
             'description' => 'nullable|string',
             'supplier' => 'nullable|string'
         ]);
 
-        $data = $request->all();
+        $data = $request->except(['gallery_images']);
 
         // Ensure stock is set and valid
         $data['stock'] = isset($data['stock']) && is_numeric($data['stock']) && $data['stock'] > 0 ? (int)$data['stock'] : 1;
@@ -64,7 +67,22 @@ class ProductController extends Controller
             $data['image'] = $path;
         }
 
-        Product::create($data);
+        $product = Product::create($data);
+
+        if ($request->hasFile('gallery_images')) {
+            foreach ($request->file('gallery_images') as $index => $image) {
+                if (!$image) {
+                    continue;
+                }
+
+                $path = $image->store('products', 'public');
+
+                $product->images()->create([
+                    'image_path' => $path,
+                    'sort_order' => $index,
+                ]);
+            }
+        }
 
         return redirect()->route('admin.products.index')->with('success', 'Product created successfully!');
     }
@@ -73,6 +91,7 @@ class ProductController extends Controller
     public function edit($id)
     {
         $product = Product::findOrFail($id);
+        $product->load('images');
         $categories = Category::all();
         return view('admin.products.edit', compact('product', 'categories'));
     }
@@ -88,12 +107,16 @@ class ProductController extends Controller
             'price' => 'required|numeric',
             'category_id' => 'nullable|exists:categories,id',
             'group_id' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+            'gallery_images' => 'nullable|array',
+            'gallery_images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:4096',
+            'remove_gallery_images' => 'nullable|array',
+            'remove_gallery_images.*' => 'nullable|integer',
             'description' => 'nullable|string',
             'supplier' => 'nullable|string'
         ]);
 
-        $data = $request->all();
+        $data = $request->except(['gallery_images', 'remove_gallery_images']);
 
         if ($request->hasFile('image')) {
             // ပုံအသစ်တင်ရင် အဟောင်းဖျက်မယ်
@@ -103,7 +126,34 @@ class ProductController extends Controller
             $data['image'] = $request->file('image')->store('products', 'public');
         }
 
-        // is_available removed
+        if ($request->filled('remove_gallery_images')) {
+            $imagesToRemove = $product->images()->whereIn('id', $request->remove_gallery_images)->get();
+
+            foreach ($imagesToRemove as $galleryImage) {
+                if ($galleryImage->image_path && Storage::disk('public')->exists($galleryImage->image_path)) {
+                    Storage::disk('public')->delete($galleryImage->image_path);
+                }
+            }
+
+            $product->images()->whereIn('id', $request->remove_gallery_images)->delete();
+        }
+
+        if ($request->hasFile('gallery_images')) {
+            $nextSortOrder = ((int) $product->images()->max('sort_order')) + 1;
+
+            foreach ($request->file('gallery_images') as $image) {
+                if (!$image) {
+                    continue;
+                }
+
+                $path = $image->store('products', 'public');
+
+                $product->images()->create([
+                    'image_path' => $path,
+                    'sort_order' => $nextSortOrder++,
+                ]);
+            }
+        }
 
         $product->update($data);
 
@@ -118,6 +168,12 @@ class ProductController extends Controller
         // ပုံပါဖျက်မယ်
         if ($product->image && Storage::disk('public')->exists($product->image)) {
             Storage::disk('public')->delete($product->image);
+        }
+
+        foreach ($product->images as $image) {
+            if ($image->image_path && Storage::disk('public')->exists($image->image_path)) {
+                Storage::disk('public')->delete($image->image_path);
+            }
         }
 
         $product->delete();
