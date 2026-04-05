@@ -232,14 +232,15 @@
         $(document).ready(function () {
             let lastCount = 0;
             let isFirstLoad = true;
+            let audioUnlocked = false;
             $('body').one('click', function () {
                 var audio = document.getElementById('notification-sound');
-                // အသံတိုးတိုးလေးဖွင့်ပြီး ချက်ချင်းပြန်ပိတ်လိုက်မယ် (Browser ကို လှည့်စားနည်းပါ)
-                audio.volume = 0.1;
+                audio.muted = true;
                 audio.play().then(() => {
                     audio.pause();
                     audio.currentTime = 0;
-                    audio.volume = 1.0; // အသံပြန်ချဲ့မယ်
+                    audio.muted = false;
+                    audioUnlocked = true;
                 }).catch(e => console.log("Audio unlock failed: " + e));
             });
 
@@ -269,11 +270,13 @@
                         }
 
                         if (newCount > lastCount && !isFirstLoad) {
-                            // Play Sound (noti.wav)
-                            try {
-                                document.getElementById('notification-sound').play().catch(e => console
-                                    .log("Interaction needed"));
-                            } catch (e) { }
+                            if (audioUnlocked && document.visibilityState === 'visible') {
+                                try {
+                                    const audio = document.getElementById('notification-sound');
+                                    audio.currentTime = 0;
+                                    audio.play().catch(e => console.log("Interaction needed"));
+                                } catch (e) { }
+                            }
 
                             // Refresh Table
                             refreshOrderTable();

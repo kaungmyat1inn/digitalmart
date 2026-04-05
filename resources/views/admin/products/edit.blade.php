@@ -10,13 +10,13 @@
                 <h2 class="text-3xl font-bold text-gray-800 dark:text-white">Edit Product</h2>
                 <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">Update product information and images</p>
             </div>
-            <a href="{{ route('admin.products.index') }}"
+            <a href="{{ route('admin.products.index', absolute: false) }}"
                 class="px-4 py-2 bg-white dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-lg shadow-sm border border-gray-200 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 transition flex items-center gap-2">
                 <i class="fas fa-arrow-left text-sm"></i> Back to List
             </a>
         </div>
 
-        <form id="product-form" action="{{ route('admin.products.update', $product->id) }}" method="POST"
+        <form id="product-form" action="{{ route('admin.products.update', ['id' => $product->id], absolute: false) }}" method="POST"
             enctype="multipart/form-data">
             @csrf
             @method('PUT')
@@ -188,7 +188,7 @@
             </div>
 
             <div class="mt-8 flex justify-end gap-3 pt-6 border-t border-gray-100 dark:border-gray-700">
-                <a href="{{ route('admin.products.index') }}"
+                <a href="{{ route('admin.products.index', absolute: false) }}"
                     class="px-6 py-2.5 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 font-medium hover:bg-gray-50 dark:hover:bg-gray-700 transition">Cancel</a>
 
                 {{-- Button type="button" to prevent default submit, we handle in JS --}}
@@ -235,6 +235,8 @@
             // AJAX Request
             const xhr = new XMLHttpRequest();
             xhr.open('POST', form.action, true);
+            xhr.setRequestHeader('Accept', 'application/json');
+            xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest');
             xhr.setRequestHeader('X-CSRF-TOKEN', '{{ csrf_token() }}');
 
             // Progress Event
@@ -250,7 +252,7 @@
 
             // Completion Event
             xhr.onload = function () {
-                if (xhr.status === 200 || xhr.status === 302) {
+                if (xhr.status >= 200 && xhr.status < 400) {
                     // Success!
                     percentText.textContent = '100%';
 
@@ -261,12 +263,19 @@
                     overlay.innerHTML = '<i class="fas fa-check-circle text-5xl text-green-500 animate-bounce"></i><p class="text-white font-bold mt-2">Saved!</p>';
 
                     setTimeout(() => {
-                        window.location.href = "{{ route('admin.products.index') }}";
+                        window.location.href = "{{ route('admin.products.index', absolute: false) }}";
                     }, 1000);
 
                 } else {
                     // Error Handling
-                    alert('Something went wrong! Please check your inputs.');
+                    let message = 'Something went wrong! Please check your inputs.';
+                    try {
+                        const response = JSON.parse(xhr.responseText);
+                        if (response.message) {
+                            message = response.message;
+                        }
+                    } catch (e) {}
+                    alert(message);
                     overlay.classList.add('hidden');
                     overlay.classList.remove('flex');
                     imagePreview.classList.remove('blur-sm');
@@ -277,7 +286,11 @@
 
             xhr.onerror = function () {
                 alert('Network Error');
+                overlay.classList.add('hidden');
+                overlay.classList.remove('flex');
+                imagePreview.classList.remove('blur-sm');
                 submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save mr-2"></i> Update Product';
             };
 
             xhr.send(formData);
@@ -299,7 +312,7 @@
             if (selectedValue) {
                 codeInput.value = "Generating...";
                 codeInput.classList.add('bg-gray-100', 'animate-pulse');
-                const url = `{{ route('admin.products.generateCode') }}?category_id=${selectedValue}`;
+                const url = `{{ route('admin.products.generateCode', absolute: false) }}?category_id=${selectedValue}`;
                 console.log('Fetching from:', url);
                 fetch(url)
                     .then(response => {
