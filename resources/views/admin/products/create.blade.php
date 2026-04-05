@@ -273,7 +273,7 @@
             if (selectedValue) {
                 codeInput.value = "Generating...";
                 codeInput.classList.add('bg-gray-100', 'animate-pulse');
-                const url = `{{ route('admin.products.generateCode') }}?category_id=${selectedValue}`;
+                const url = `{{ route('admin.products.generateCode', absolute: false) }}?category_id=${selectedValue}`;
                 console.log('Fetching from:', url);
                 fetch(url)
                     .then(response => {
@@ -318,18 +318,26 @@
                 return;
             }
             loading.classList.remove('hidden');
-            const url = "{{ route('admin.categories.storeAjax') }}";
+            const url = "{{ route('admin.categories.storeAjax', absolute: false) }}";
             console.log('Sending category to:', url);
             fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
+                    "Accept": "application/json",
+                    "X-Requested-With": "XMLHttpRequest",
                     "X-CSRF-TOKEN": "{{ csrf_token() }}"
                 },
                 body: JSON.stringify({ name: name })
             })
                 .then(response => {
                     console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        return response.json().catch(() => ({
+                            success: false,
+                            message: `HTTP error! status: ${response.status}`
+                        }));
+                    }
                     return response.json();
                 })
                 .then(data => {
