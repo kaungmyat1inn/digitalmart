@@ -1,6 +1,10 @@
 @extends('layouts.master')
 
 @section('content')
+    @php
+        $productSlug = fn ($name) => \Illuminate\Support\Str::of($name)->replace(' ', '_')->slug('_');
+    @endphp
+
     @if (session('error'))
         <div class="sticky top-[73px] z-30 bg-red-500 px-4 py-3 text-center text-sm font-semibold text-white">
             {{ session('error') }}
@@ -24,8 +28,7 @@
 
     <section class="bg-white">
         <div class="container mx-auto px-4 py-6">
-            <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr),280px]">
-                <div class="relative overflow-hidden rounded-md border border-slate-200 bg-slate-100">
+            <div class="relative overflow-hidden rounded-md border border-slate-200 bg-slate-100">
                     @foreach ($heroSlides as $slide)
                         <article
                             class="hero-slide relative min-h-[220px] {{ $loop->first ? 'block' : 'hidden' }}"
@@ -73,22 +76,6 @@
                             @endforeach
                         </div>
                     @endif
-                </div>
-
-                <div class="grid gap-4 sm:grid-cols-3 lg:grid-cols-1">
-                    <div class="rounded-md border border-slate-200 bg-white p-5">
-                        <p class="text-sm font-semibold text-slate-500">Total Products</p>
-                        <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ $featuredProductsCount }}</p>
-                    </div>
-                    <div class="rounded-md border border-slate-200 bg-white p-5">
-                        <p class="text-sm font-semibold text-slate-500">In Stock</p>
-                        <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ $inStockProductsCount }}</p>
-                    </div>
-                    <div class="rounded-md border border-slate-200 bg-white p-5">
-                        <p class="text-sm font-semibold text-slate-500">Orders</p>
-                        <p class="mt-2 text-3xl font-extrabold text-slate-900">{{ $totalOrdersCount }}</p>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
@@ -100,10 +87,10 @@
                     <div class="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
                         <div>
                             <p class="text-[15px] font-bold text-slate-900">
-                                {{ $search ? 'Search Results' : 'Just For You' }}
+                                {{ $search ? 'Search Results' : $homepageSettings->just_for_you_title }}
                             </p>
                             <p class="mt-1 text-sm text-slate-500">
-                                {{ $search ? $products->total() . ' products found for "' . $search . '"' : 'Simple product list for easy browsing.' }}
+                                {{ $search ? $products->total() . ' products found for "' . $search . '"' : $homepageSettings->just_for_you_subtitle }}
                             </p>
                         </div>
                         <div class="flex flex-wrap gap-3">
@@ -123,16 +110,16 @@
 
                 <div class="grid grid-cols-2 gap-3 p-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
                     @foreach ($products as $product)
+                        @php
+                            $detailUrl = route('products.show', ['product' => $product->id, 'slug' => $productSlug($product->name)]);
+                        @endphp
                         <article
-                            class="group overflow-hidden rounded-md border border-slate-200 bg-white transition hover:border-slate-300 hover:shadow-md {{ $product->stock > 0 ? 'cursor-pointer' : 'opacity-80' }}"
-                            onclick="{{ $product->stock > 0 ? 'openProductModal(this)' : '' }}" data-id="{{ $product->id }}"
-                            data-name="{{ $product->name }}" data-price="{{ number_format($product->price) }}"
-                            data-image="{{ asset('storage/' . $product->image) }}" data-category="{{ $product->category->name }}"
-                            data-code="{{ $product->code_number }}" data-add-cart-url="{{ route('add_to_cart', $product->id) }}"
-                            data-description="{{ $product->description }}" data-stock="{{ $product->stock }}">
+                            class="group overflow-hidden rounded-md border border-slate-200 bg-white transition hover:border-slate-300 hover:shadow-md {{ $product->stock > 0 ? '' : 'opacity-80' }}">
                             <div class="relative aspect-square overflow-hidden bg-slate-100">
-                                <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
-                                    class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
+                                <a href="{{ $detailUrl }}" class="block h-full w-full">
+                                    <img src="{{ asset('storage/' . $product->image) }}" alt="{{ $product->name }}"
+                                        class="h-full w-full object-cover transition duration-300 group-hover:scale-105">
+                                </a>
                                 @if ($product->stock <= 0)
                                     <span class="absolute right-2 top-2 rounded bg-red-500 px-2 py-1 text-[10px] font-bold uppercase text-white">
                                         Out
@@ -146,9 +133,9 @@
 
                             <div class="space-y-2 p-3">
                                 <p class="text-[11px] text-slate-400">{{ $product->category->name }}</p>
-                                <h3 class="min-h-[40px] text-sm font-semibold leading-5 text-slate-800">
+                                <a href="{{ $detailUrl }}" class="block min-h-[40px] text-sm font-semibold leading-5 text-slate-800 transition hover:text-orange-600">
                                     {{ \Illuminate\Support\Str::limit($product->name, 46) }}
-                                </h3>
+                                </a>
                                 <p class="text-[11px] text-slate-400">{{ $product->code_number }}</p>
 
                                 @if ($product->stock > 0)
@@ -157,10 +144,10 @@
                                             <p class="text-lg font-extrabold text-orange-600">{{ number_format($product->price) }}</p>
                                             <p class="text-[11px] uppercase text-slate-400">MMK</p>
                                         </div>
-                                        <button type="button" onclick="event.stopPropagation(); quickView({{ $product->id }})"
-                                            class="inline-flex h-9 w-9 items-center justify-center rounded-md bg-orange-500 text-white transition hover:bg-orange-600">
-                                            <i class="fa-solid fa-plus text-xs"></i>
-                                        </button>
+                                        <a href="{{ $detailUrl }}"
+                                            class="inline-flex h-9 items-center justify-center rounded-md border border-slate-300 px-3 text-xs font-semibold text-slate-700 transition hover:bg-slate-50">
+                                            Details
+                                        </a>
                                     </div>
                                 @else
                                     <p class="pt-1 text-sm font-semibold text-red-500">Out of stock</p>
@@ -177,170 +164,7 @@
         </div>
     </section>
 
-    <div id="productModal" class="fixed inset-0 z-50 hidden" aria-labelledby="modal-title" role="dialog" aria-modal="true">
-        <div class="fixed inset-0 bg-slate-900/60" onclick="closeProductModal()"></div>
-
-        <div class="fixed inset-0 z-10 overflow-y-auto">
-            <div class="flex min-h-full items-center justify-center p-4">
-                <div class="relative w-full max-w-4xl scale-95 rounded-2xl bg-white opacity-0 shadow-2xl transition-all duration-300"
-                    id="modalPanel">
-                    <button type="button" onclick="closeProductModal()"
-                        class="absolute right-4 top-4 z-20 rounded-full bg-white p-2 text-slate-500 shadow-sm transition hover:text-slate-900">
-                        <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-
-                    <div class="grid grid-cols-1 md:grid-cols-2">
-                        <div class="relative flex items-center justify-center bg-slate-100 p-8 md:min-h-[460px]">
-                            <img id="modalImage" src="" alt="Product Image"
-                                class="max-h-[360px] max-w-full rounded-xl object-contain">
-                            <span id="modalStockBadge"
-                                class="absolute left-4 top-4 hidden rounded px-3 py-1 text-sm font-bold"></span>
-                        </div>
-
-                        <div class="flex flex-col p-8">
-                            <div class="mb-auto space-y-4">
-                                <span id="modalCategory"
-                                    class="inline-flex rounded bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-600"></span>
-
-                                <h2 id="modalTitle" class="text-2xl font-bold leading-tight text-slate-900"></h2>
-
-                                <p class="inline-block rounded bg-slate-100 px-3 py-1 text-sm text-slate-500">
-                                    Code: <span id="modalCode"></span>
-                                </p>
-
-                                <div class="border-y border-slate-200 py-4">
-                                    <div class="flex items-end gap-2">
-                                        <span id="modalPrice" class="text-3xl font-extrabold text-orange-600"></span>
-                                        <span class="text-slate-500">ကျပ်</span>
-                                    </div>
-                                </div>
-
-                                <div>
-                                    <h3 class="mb-2 text-sm font-semibold text-slate-900">Description</h3>
-                                    <p id="modalDescription" class="text-sm leading-7 text-slate-600"></p>
-                                </div>
-
-                                <div>
-                                    <h3 class="mb-3 text-sm font-semibold text-slate-900">Available Variants</h3>
-                                    <div id="modalVariants" class="flex flex-wrap gap-2"></div>
-                                </div>
-                            </div>
-
-                            <div class="mt-6 flex items-center gap-4 border-t border-slate-200 pt-6">
-                                <a id="modalAddToCart" href="#"
-                                    class="inline-flex flex-1 items-center justify-center rounded-md bg-orange-500 px-6 py-3 text-sm font-semibold text-white transition hover:bg-orange-600">
-                                    Add to Cart
-                                </a>
-                                <button type="button" onclick="addToWishlist()"
-                                    class="rounded-md border border-slate-300 px-4 py-3 text-slate-500 transition hover:bg-slate-50 hover:text-slate-700">
-                                    <i class="fa-regular fa-heart"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script>
-        const getCurrentProducts = () => @json($products->items());
-
-        function quickView(productId) {
-            const product = document.querySelector(`[data-id="${productId}"]`);
-            if (product) openProductModal(product);
-        }
-
-        function openProductModal(element) {
-            const modal = document.getElementById('productModal');
-            const modalPanel = document.getElementById('modalPanel');
-            const data = element.dataset;
-
-            document.getElementById('modalImage').src = data.image;
-            document.getElementById('modalCategory').textContent = data.category;
-            document.getElementById('modalTitle').textContent = data.name;
-            document.getElementById('modalCode').textContent = data.code;
-            document.getElementById('modalPrice').textContent = data.price;
-            document.getElementById('modalAddToCart').href = data.addCartUrl;
-            document.getElementById('modalDescription').textContent = data.description || 'No description available.';
-
-            const stockBadge = document.getElementById('modalStockBadge');
-            if (parseInt(data.stock) <= 0) {
-                stockBadge.textContent = 'Out of Stock';
-                stockBadge.className = 'absolute left-4 top-4 rounded bg-red-500 px-3 py-1 text-sm font-bold text-white';
-                stockBadge.classList.remove('hidden');
-            } else if (parseInt(data.stock) <= 5) {
-                stockBadge.textContent = `Only ${data.stock} left`;
-                stockBadge.className = 'absolute left-4 top-4 rounded bg-amber-400 px-3 py-1 text-sm font-bold text-slate-900';
-                stockBadge.classList.remove('hidden');
-            } else {
-                stockBadge.classList.add('hidden');
-            }
-
-            let variants = [];
-            const currentId = parseInt(data.id);
-            const currentProducts = getCurrentProducts();
-            const currentProduct = currentProducts.find(p => p.id == currentId);
-
-            if (currentProduct && currentProduct.variants && currentProduct.variants.length > 0) {
-                variants = currentProduct.variants;
-            }
-
-            const variantsDiv = document.getElementById('modalVariants');
-            variantsDiv.innerHTML = '';
-            if (variants.length > 0) {
-                variants.forEach(variant => {
-                    const btn = document.createElement('button');
-                    btn.className = 'rounded border border-slate-300 px-3 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-50';
-                    btn.textContent = `${variant.name} (${variant.code_number})`;
-                    btn.onclick = function() {
-                        const el = document.querySelector(`[data-id="${variant.id}"]`);
-                        if (el) {
-                            openProductModal(el);
-                        }
-                    };
-                    variantsDiv.appendChild(btn);
-                });
-            } else {
-                variantsDiv.innerHTML = '<span class="text-sm text-slate-400">No other variants available</span>';
-            }
-
-            modal.classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-
-            setTimeout(() => {
-                modalPanel.classList.remove('scale-95', 'opacity-0');
-                modalPanel.classList.add('scale-100', 'opacity-100');
-            }, 10);
-        }
-
-        function closeProductModal() {
-            const modal = document.getElementById('productModal');
-            const modalPanel = document.getElementById('modalPanel');
-
-            modalPanel.classList.remove('scale-100', 'opacity-100');
-            modalPanel.classList.add('scale-95', 'opacity-0');
-
-            setTimeout(() => {
-                modal.classList.add('hidden');
-                document.body.style.overflow = '';
-            }, 200);
-        }
-
-        function addToWishlist() {
-            return;
-        }
-
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape') {
-                closeProductModal();
-            }
-        });
-
         document.addEventListener('DOMContentLoaded', function() {
             const slides = Array.from(document.querySelectorAll('.hero-slide'));
             const dots = Array.from(document.querySelectorAll('.hero-dot'));

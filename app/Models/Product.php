@@ -14,6 +14,10 @@ class Product extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'is_featured_home' => 'boolean',
+    ];
+
     /**
      * Attributes to append to JSON (for API). Includes full image URL so
      * Flutter/mobile apps can load images without building the URL.

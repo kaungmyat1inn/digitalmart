@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\HomepageSetting;
 use App\Models\PromotionSlide;
+use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
 
@@ -19,6 +21,14 @@ class HomeController extends Controller
             ->orderByDesc('created_at')
             ->get();
 
+        $homepageSettings = HomepageSetting::firstOrCreate(
+            ['id' => 1],
+            [
+                'just_for_you_title' => 'Just For You',
+                'just_for_you_subtitle' => 'Simple product list for easy browsing.',
+            ]
+        );
+
         $products = \App\Models\Product::with(['category', 'variants'])
             ->withCount('orderItems')
             ->when($search, function ($query, $search) {
@@ -27,10 +37,18 @@ class HomeController extends Controller
                         ->orWhere('code_number', 'like', "%{$search}%")
                         ->orWhere('description', 'like', "%{$search}%");
                 });
+            }, function ($query) {
+                $featuredExists = Product::where('is_featured_home', true)->exists();
+
+                if ($featuredExists) {
+                    $query->where('is_featured_home', true)
+                        ->orderBy('featured_sort_order');
+                } else {
+                    $query->orderBy('order_items_count', 'desc')
+                        ->latest();
+                }
             })
             ->orderByRaw('CASE WHEN stock > 0 THEN 1 ELSE 0 END DESC')
-            ->orderBy('order_items_count', 'desc')
-            ->latest()
             ->paginate(16);
 
         $featuredProductsCount = Product::count();
@@ -41,11 +59,29 @@ class HomeController extends Controller
             'products',
             'search',
             'slides',
+            'homepageSettings',
             'featuredProductsCount',
             'inStockProductsCount',
             'totalOrdersCount'
         ));
     }
+
+    public function productDetail(Product $product, string $slug = null)
+    {
+        $expectedSlug = Str::of($product->name)->replace(' ', '_')->slug('_');
+
+        if ($slug !== $expectedSlug) {
+            return redirect()->route('products.show', [
+                'product' => $product->id,
+                'slug' => $expectedSlug,
+            ]);
+        }
+
+        $product->load(['category', 'variants.category']);
+
+        return view('product_detail', compact('product'));
+    }
+
     public function trackOrder(Request $request)
     {
         // Search Button နှိပ်မှ အလုပ်လုပ်မယ်

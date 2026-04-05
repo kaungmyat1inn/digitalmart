@@ -6,10 +6,12 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\HomepageSettingController;
 use App\Http\Controllers\PromotionSlideController;
 
 // ============ PUBLIC ROUTES ============
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/products/{product}/{slug?}', [HomeController::class, 'productDetail'])->name('products.show');
 
 Route::get('cart', [CartController::class, 'index'])->name('cart.index');
 Route::get('add-to-cart/{id}', [CartController::class, 'addToCart'])->name('add_to_cart');
@@ -86,6 +88,10 @@ Route::middleware('auth')->group(function () {
         Route::post('/admin/promotions', [PromotionSlideController::class, 'store'])->name('admin.promotions.store');
         Route::put('/admin/promotions/{promotion}', [PromotionSlideController::class, 'update'])->name('admin.promotions.update');
         Route::delete('/admin/promotions/{promotion}', [PromotionSlideController::class, 'destroy'])->name('admin.promotions.destroy');
+
+        // Homepage Settings
+        Route::get('/admin/homepage', [HomepageSettingController::class, 'index'])->name('admin.homepage.index');
+        Route::put('/admin/homepage', [HomepageSettingController::class, 'update'])->name('admin.homepage.update');
 
         // Admin Management Routes (Only for Super Admin)
         Route::middleware('admin.super_admin')->group(function () {
